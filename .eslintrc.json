@@ -1,4 +1,7 @@
 {
   "extends": ["next", "prettier"],
-  "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "@next/next/no-img-element": "off"
+  }
 }

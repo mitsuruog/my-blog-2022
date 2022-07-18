@@ -1,3 +1,25 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-pt-28;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 300;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "pwid";
+  }
+
+  body {
+    @apply bg-slate-50;
+  }
+}
+
+@layer components {
+  a {
+    @apply cursor-pointer hover:underline;
+  }
+}
