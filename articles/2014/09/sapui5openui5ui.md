@@ -23,18 +23,6 @@ OpenUI5 は UI フレームワークという名前の通り、多くの優れ�
 
 ### 目次
 
-1. 新しい UI コントロールの定義
-2. UI コントロールメタデータの定義
-3. レンダラの実装
-4. 配布、利用
-5. まとめ
-
-6. Definition of UI controls
-7. Definition ofUI controls metadate
-8. Implementation of the renderer
-9. How to use
-10. Summary
-
 こちらの公式ページの内容をもとに書いています。
 
 [Developing UI5 Controls in JavaScript](https://openui5.hana.ondemand.com/#docs/guide/91f1703b6f4d1014b6dd926db0e91070.html)
@@ -43,7 +31,7 @@ OpenUI5 は UI フレームワークという名前の通り、多くの優れ�
 
 新しい UI コントロールを作成するためには、まず`sap.ui.core.Control`を継承する必要があります。以下のコードは新規で`mitsuruog.SayHello`という名前の UI コントロールを定義しています。
 
-```coffee
+```
 sap.ui.core.Control.extend "mitsuruog.SayHello",
   metadata: {}
   renderer: {}
@@ -75,7 +63,7 @@ UI コントロールに外部からリストを渡したい場合に定義し�
 
 実装例)
 
-```coffee
+```
 
 sap.ui.core.Control.extend "mitsuruog.BlueContainer",
 
@@ -120,7 +108,7 @@ sap.ui.core.Control.extend "mitsuruog.BlueContainer",
 
 実装例）
 
-```coffee
+```
 sap.ui.core.Control.extend "mitsuruog.BlueContainer",
 
   metadata:
@@ -162,7 +150,7 @@ sap.ui.core.Control.extend "mitsuruog.BlueContainer",
 配布方法は UI コントロールを 1 つの Javascript ファイルにまとめて`index.html`で読み込めばいいと思います。
 OpenUI5 には`RequireJS`のようなモジュールシステムがあるので、以下のようにモジュール化して呼び出し先でロードします。
 
-```coffee
+```
 #
 # カスタムUIコントロール側
 #

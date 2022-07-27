@@ -3,13 +3,13 @@ layout: post
 title: "Airbnb JavaScript スタイルガイドを翻訳しました"
 date: 2013-02-16 23:01:00 +0900
 comments: true
-tags: 
- - styleguide
- - 翻訳
+tags:
+  - styleguide
+  - 翻訳
 ---
 
-知っている人は知っている「Airbnb」のJavaScript スタイルガイドを翻訳しました。  
-急に上司から「Javascriptのスタイルガイドないの？」って言われて困ったら思い出してください。
+知っている人は知っている「Airbnb」の JavaScript スタイルガイドを翻訳しました。  
+急に上司から「Javascript のスタイルガイドないの？」って言われて困ったら思い出してください。
 
 <!-- more -->
 
@@ -17,17 +17,17 @@ tags:
 
 1.  ネタがなくて困ってたら使ってください。
 2.  困ってなくても、イイなと思ったら使ってください。
-3.  良かったらAirbnbも使ってください。
+3.  良かったら Airbnb も使ってください。
 
-## Airbnbとは
+## Airbnb とは
 
-Airbnbとはアメリカのサンフランシスコにある、個性的な宿を扱うスタートアップ企業です。詳細は下の記事を読んでください。
+Airbnb とはアメリカのサンフランシスコにある、個性的な宿を扱うスタートアップ企業です。詳細は下の記事を読んでください。
 
-[旅行のソーシャル化は「現実世界のFacebook」、AirBnB CEOに聞いた。](http://www.atmarkit.co.jp/ait/articles/1211/30/news123.html)
+[旅行のソーシャル化は「現実世界の Facebook」、AirBnB CEO に聞いた。](http://www.atmarkit.co.jp/ait/articles/1211/30/news123.html)
 
 [Airbnb（JP）](https://www.airbnb.jp/)
 
-去年の秋くらいに、サイバーエージェントさん主催のFrontrendで名前を聞いた（ような気がする・・・）辺りからチェックしていました。  
+去年の秋くらいに、サイバーエージェントさん主催の Frontrend で名前を聞いた（ような気がする・・・）辺りからチェックしていました。  
 このたび勉強のついでに翻訳してみました。
 
 ## スタイルガイドについて
@@ -38,8 +38,8 @@ Airbnbとはアメリカのサンフランシスコにある、個性的な宿�
 
 このスタイルガイドの特徴は、
 
-* オープンな議論を通じてスタイルが決定していること。
-* スタイルについてパフォーマンスに関するエビデンスがあること。
+- オープンな議論を通じてスタイルが決定していること。
+- スタイルについてパフォーマンスに関するエビデンスがあること。
 
 だと感じています。
 
@@ -51,14 +51,11 @@ Airbnbとはアメリカのサンフランシスコにある、個性的な宿�
 
 [https://github.com/airbnb/javascript（本家）](https://github.com/airbnb/javascript)
 
-<blockquote class="twitter-tweet" data-lang="ja"><p lang="en" dir="ltr">RT <a href="https://twitter.com/hshoff?ref_src=twsrc%5Etfw">@hshoff</a>: Our JavaScript style guide is now available in Japanese: <a href="http://t.co/a6AdAC7Z">http://t.co/a6AdAC7Z</a>… Thanks <a href="https://twitter.com/mitsuruog?ref_src=twsrc%5Etfw">@mitsuruog</a>!</p>&mdash; mitsuruog (@mitsuruog) <a href="https://twitter.com/mitsuruog/status/302251712863940608?ref_src=twsrc%5Etfw">2013年2月15日</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 最近、ドイツ語訳版作られたので、この先何ヶ国語に翻訳されるかちょっと楽しみです。
 
 > (2014/11/09 追記)
-> 現在10ヶ国語に翻訳されています
-> {% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/airbnb_javascript.png %}
+> 現在 10 ヶ国語に翻訳されています
+> ![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/airbnb_javascript.png)
 
 ちなみに、組織（法人とか）で採用した場合、本家にプルリクエストするとリストに追加してます。もちろん翻訳版を使ってくれて、私にプルリクエストくれても結構です。
 
@@ -71,7 +68,6 @@ Airbnbとはアメリカのサンフランシスコにある、個性的な宿�
 [JavaScript Guide \| MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
 
 他には、
-
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&t=mitsuruog-22&m=amazon&o=9&p=8&l=as1&IS1=1&detail=1&asins=4873113911&linkId=5004dc6f4630ee1e45646abc8c8bf379&bc1=000000&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
 </iframe>

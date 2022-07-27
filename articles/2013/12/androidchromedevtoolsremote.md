@@ -48,7 +48,7 @@ Google で調べるといろいろ出てきますので、詳しくは紹介し�
 
 まず、デバイスを USB で接続して、ローカル PC 上の Chrome のアドレスバーにて「chrome://inspect」と打ってください。下のような画面が表示されて、接続してあるデバイスが表示されれば準備は OK です。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting1.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting1.png)
 
 ### Remote Debugging 使ってみる
 
@@ -57,14 +57,14 @@ Google で調べるといろいろ出てきますので、詳しくは紹介し�
 
 さらに、ブラウザのバージョン番号が表示されている横のテキストボックスに URL を入力することで、デバイス側へ表示させてたいページを送ることができ、Remote Debugging と組み合わせることで、ローカル上で開発中の画面をデバイス側でデバックすることができます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting2.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting2.png)
 
 ### Port Forwarding
 
 Port Forwarding とはローカル PC 上の TCP ポートをそのままデバイス側に転送する機能です。具体的にはローカル PC 上で開発している「localhost:9000」など、今まさに開発中の Web ページをデバイス側へ転送して表示させることができます。
 （本家のサイトに記載されてますが、ネットワークなどの制限により動作しない場合があるようです。）
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting3.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting3.png)
 
 ### Port Forwarding + Grunt + livereload
 
@@ -77,11 +77,11 @@ Port Forwarding とはローカル PC 上の TCP ポートをそのままデバ�
 次のように 9000、9002 ポートを転送するように、Port Forwarding 設定をします。
 （livereload のデフォルトポートは 35729 なのですが、Devtools 側が 4 桁ポートしか受け入れてくれないので、9002 にしてます。Devtools チームの皆さんなんとかしてくださーい。）
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting4.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting4.png)
 
 設定が正しく行われると、転送されるポートが画面上で確認できます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting5.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting5.png)
 
 これで、9002 ポートを経由して livereload ができるようになりました。
 コード修正のたびに、デバイスのブラウザをリフレッシュするという手間がなくなりましたね。
@@ -101,22 +101,22 @@ Screencasting を使うためには、ローカル PC 上の Chrome のアドレ
 「デベロッパー ツールのテストを有効にする（#enable-devtools-experiments）」
 「USB でリモート デバッグを有効にする。（#remote-debugging-raw-usb）」
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting6.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting6.png)
 
 変更したら、下の方に Chrome を再起動するためのボタンが表示されますので、再起動してください。
 そして Devtools の設定画面を開いてみると、見慣れない「Experiments」メニューが表示されるはずです。
 そこで「Enable screencast」にチェックをすると準備は OK です。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting7.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting7.png)
 
 ### Screencasting を使ってみる
 
 とりあえず、先ほどの Remote Debugging と同じ要領で、デバイスを USB でつないで Remote Debugging してみてください。今度は、Devtools の下の方に見慣れない「□」が表示されているはずです。（ちょっと分かりにくいですが w）
 これを押すとデバイスで表示されてるページがローカル PC 上に転送されてきます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting8.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting8.png)
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting9.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2013/Screencasting9.png)
 
 ちなみに、Screencasting された画面では次のことができます。  
 素晴らしい！！

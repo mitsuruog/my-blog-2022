@@ -13,41 +13,42 @@ tags:
   - unit test
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/angular2-testing-logo.png
 ---
-Angular2の実装の方法は記事をよく目にする機会が増えたので、テストについての自分が困らないように調べてみたシリーズ。
+
+Angular2 の実装の方法は記事をよく目にする機会が増えたので、テストについての自分が困らないように調べてみたシリーズ。
 
 今回はカバレッジ編。
 
 <!-- more -->
 
 > （注意）Angular 2.0.0-beta.9 をベースに話しています。
-E2Eテストはprotractorがそのまま利用できると思うので、ここでのテストはユニットテストの話です。
+> E2E テストは protractor がそのまま利用できると思うので、ここでのテストはユニットテストの話です。
 
 ## Angular2 Unit Testing
 
 1. [準備](/2016/03/how-to-test-angular2-application-1.html)
 1. [基本](/2016/03/how-to-test-angular2-application-basic.html)
-1. Mock, Spyの基本(TBD)
-1. [DOMのテスト](/2016/03/how-to-test-angular2-application-dom.html)
-1. [XHRのテスト](/2016/03/how-to-test-angular2-application-xhr.html)
-1. Componentのテスト(TBD)
-1. Serviceのテスト(TBD)
-1. [Pipeのテスト](/2016/03/how-to-test-angular2-application-pipe.html)
-1. Directiveのテスト(TBD)
+1. Mock, Spy の基本(TBD)
+1. [DOM のテスト](/2016/03/how-to-test-angular2-application-dom.html)
+1. [XHR のテスト](/2016/03/how-to-test-angular2-application-xhr.html)
+1. Component のテスト(TBD)
+1. Service のテスト(TBD)
+1. [Pipe のテスト](/2016/03/how-to-test-angular2-application-pipe.html)
+1. Directive のテスト(TBD)
 1. [カバレッジ](/2016/03/how-to-test-angular2-application-coverage.html)
 
 ## カバレッジ編
 
-> コード網羅率（コードもうらりつ、英: Code coverage ）コードカバレッジは、ソフトウェアテストで用いられる尺度の1つである。プログラムのソースコードがテストされた割合を意味する。
-[コード網羅率 - Wikipedia](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%BC%E3%83%89%E7%B6%B2%E7%BE%85%E7%8E%87)
+> コード網羅率（コードもうらりつ、英: Code coverage ）コードカバレッジは、ソフトウェアテストで用いられる尺度の 1 つである。プログラムのソースコードがテストされた割合を意味する。
+> [コード網羅率 - Wikipedia](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%BC%E3%83%89%E7%B6%B2%E7%BE%85%E7%8E%87)
 
 カバレッジを取得することのメリットは、コードの危ない部分に対して効果的にテストができているか客観的に評価できることです。。
-特にHTML形式のレポートは、コードとテストを実行した部分を重ねて表示することができ、結果を視覚的に見やすくしてくれます。
+特に HTML 形式のレポートは、コードとテストを実行した部分を重ねて表示することができ、結果を視覚的に見やすくしてくれます。
 
-最近のJavaScriptのテストではカバレッジ取得のための環境が整ってきたこともあり、積極的に活用していくべきです。
+最近の JavaScript のテストではカバレッジ取得のための環境が整ってきたこともあり、積極的に活用していくべきです。
 
-## karma-coverageでカバレッジを測定する
+## karma-coverage でカバレッジを測定する
 
-Karmaでカバレッジを取得するためには、プラグインの1つである[karma-coverage](https://github.com/karma-runner/karma-coverage)を利用します。
+Karma でカバレッジを取得するためには、プラグインの 1 つである[karma-coverage](https://github.com/karma-runner/karma-coverage)を利用します。
 早速、リポジトリの`devDependency`に追加します。
 
 ```
@@ -57,6 +58,7 @@ npm install karma karma-coverage --save-dev
 続いて`karma.conf.js`の設定を変更します。
 
 **karma.conf.js**
+
 ```js
 'use strict';
 // Karma configuration
@@ -94,26 +96,26 @@ module.exports = function (config) {
 }
 ```
 
-テストを実行すると`report/coverage`の直下にHTML形式のカバレッジレポートが出力されます。
+テストを実行すると`report/coverage`の直下に HTML 形式のカバレッジレポートが出力されます。
 
-{%img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-1.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-1.png)
 
-karma-coverage内部では、JavaScriptのカバレッジ測定ツールとして有名な[istanbul](https://github.com/gotwarlost/istanbul)を利用しています。
-HTMLレポートでは、ディレクトリやファイルごとにカバレッジを知ることができます。これを見ながらカバレッジの低い部分などに追加のテストを書いていきます。
+karma-coverage 内部では、JavaScript のカバレッジ測定ツールとして有名な[istanbul](https://github.com/gotwarlost/istanbul)を利用しています。
+HTML レポートでは、ディレクトリやファイルごとにカバレッジを知ることができます。これを見ながらカバレッジの低い部分などに追加のテストを書いていきます。
 
-{%img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-2.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-2.png)
 
 コードとテスト実行した部分を重ねあわせて表示することで、テストが不足している部分を容易に発見できます。
 
-{%img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-3.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-3.png)
 
-ところがこのままでは、レポートのコードがtsファイルをトランスパイルしたJavaScriptファイルとなっているため、実際に作成したtsファイル上のどの部分に該当するかが非常に分かりにくいです。
+ところがこのままでは、レポートのコードが ts ファイルをトランスパイルした JavaScript ファイルとなっているため、実際に作成した ts ファイル上のどの部分に該当するかが非常に分かりにくいです。
 
-## remap-istanbulでtsファイルとリンクさせる
+## remap-istanbul で ts ファイルとリンクさせる
 
-先ほどのカバレッジレポートを改良してトランスパイル前のtsファイルをリンクさせます。リンクさせるには[remap-istanbul](https://github.com/SitePen/remap-istanbul)を利用します。
+先ほどのカバレッジレポートを改良してトランスパイル前の ts ファイルをリンクさせます。リンクさせるには[remap-istanbul](https://github.com/SitePen/remap-istanbul)を利用します。
 
-remap-istanbulとは、tsファイルをトランスパイルした際に生成されるSouceMap(ここではinline SouceMap)を元に、カバレッジレポートをオリジナルのtsファイルにリンクさせるツールです。
+remap-istanbul とは、ts ファイルをトランスパイルした際に生成される SouceMap(ここでは inline SouceMap)を元に、カバレッジレポートをオリジナルの ts ファイルにリンクさせるツールです。
 早速、リポジトリの`devDependency`に追加します。
 
 ```
@@ -123,6 +125,7 @@ npm install karma remap-istanbul --save-dev
 続いて`karma.conf.js`の設定を変更します。カバレッジレポートのフォーマットを`html`ではなく`json`に変更します。
 
 **karma.conf.js**
+
 ```js
 'use strict';
 // Karma configuration
@@ -162,29 +165,29 @@ module.exports = function (config) {
 }
 ```
 
-テストを実行すると`report/coverage/coverage-final.json`にJSON形式のカバレッジレポートが出力されます。
-これをremap-istanbulでHTML形式のレポートに仕立てて行きます。
+テストを実行すると`report/coverage/coverage-final.json`に JSON 形式のカバレッジレポートが出力されます。
+これを remap-istanbul で HTML 形式のレポートに仕立てて行きます。
 
 ```
 node_modules/.bin/remap-istanbul -i report/coverage/coverage-final.json -o report/coverage/ -t html
 ```
 
-コマンドを実行すると`report/coverage`の直下にHTML形式のカバレッジレポートが出力されます。
+コマンドを実行すると`report/coverage`の直下に HTML 形式のカバレッジレポートが出力されます。
 
-{%img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-4.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-coverage-4.png)
 
-今度はtsファイルとカバレッジレポートがリンクするようになりました。
+今度は ts ファイルとカバレッジレポートがリンクするようになりました。
 めでたし。めでたし。
 
 ## まとめ
 
 カバレッジの取り方とレポートの表示についてでした。
-HTMLレポートの出力方法は他にもあると思いますので、いろいろ試してみるといいでしょう。
+HTML レポートの出力方法は他にもあると思いますので、いろいろ試してみるといいでしょう。
 カバレッジレポートを取得することで、テストが十分でない箇所を明らかにすることができ、つまらないテストにゲーム的な要素が加わってテストを書くことが楽しくなります。
 
 ### PR
 
-こちらに初学者のためのMinimum starter kitを作成しましたので、ぜひ利用してください。
+こちらに初学者のための Minimum starter kit を作成しましたので、ぜひ利用してください。
 (もちろんカバレッジも取得できます！！)
 
-mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2 https://github.com/mitsuruog/angular2-minimum-starter
+[mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2](https://github.com/mitsuruog/angular2-minimum-starter)

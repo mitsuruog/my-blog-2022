@@ -9,18 +9,18 @@ tags:
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/swift-react-native-logo.png
 ---
 
-react-nativeでSwiftのNative moduleを呼び出す方法です。基本的には下のBlogのやり方を真似ています。
+react-native で Swift の Native module を呼び出す方法です。基本的には下の Blog のやり方を真似ています。
 
 - [Swift in React Native \- The Ultimate Guide Part 1: Modules](https://teabreak.e-spres-oh.com/swift-in-react-native-the-ultimate-guide-part-1-modules-9bb8d054db03)
 
 紹介する内容は次の通りです。
 
-- 簡単なCounterをNative Moduleで実装した
-- Native Moduleの呼び出し
-- Native ModuleからConstantsを受け取る
-- Native ModuleからのCallbackを扱う
-- Native ModuleからのPromiseを扱う
-- Native ModuleからのEventを扱う
+- 簡単な Counter を Native Module で実装した
+- Native Module の呼び出し
+- Native Module から Constants を受け取る
+- Native Module からの Callback を扱う
+- Native Module からの Promise を扱う
+- Native Module からの Event を扱う
 
 対象のバージョンは次の通りです。
 
@@ -28,32 +28,32 @@ react-nativeでSwiftのNative moduleを呼び出す方法です。基本的に�
 - Swift: 4.2.1
 - Xcode: 10.1
 
-プロジェクト全体のコードはGitHubで見ることができます。
+プロジェクト全体のコードは GitHub で見ることができます。
 
-- https://github.com/mitsuruog/react-native-call-native-module-sample
+- <https://github.com/mitsuruog/react-native-call-native-module-sample>
 
-ちなみにSwiftとObjecvive-Cは初めて書きました。
+ちなみに Swift と Objecvive-C は初めて書きました。
 
-## Native Moduleの呼び出し
+## Native Module の呼び出し
 
-まず、`Counter.swift`というSwiftのクラスを作成します。
-この時にObjective-C Bridging Headerの設定をするか確認されるので、「Create Bridging Header」を選択してBride Headerファイルを作成します。
+まず、`Counter.swift`という Swift のクラスを作成します。
+この時に Objective-C Bridging Header の設定をするか確認されるので、「Create Bridging Header」を選択して Bride Header ファイルを作成します。
 
 このようなダイアログが表示されるはずです。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/swift-react-native1.png 550 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/swift-react-native1.png)
 
-> Bride Headerファイルは、一度設定されるとXcodeのプロジェクトファイルで管理されているため、手動でファイル名などを変更することは避けましょう。
+> Bride Header ファイルは、一度設定されると Xcode のプロジェクトファイルで管理されているため、手動でファイル名などを変更することは避けましょう。
 
-Bride Headerファイルにreact-nativeのモジュールをインポートしておきます。
+Bride Header ファイルに react-native のモジュールをインポートしておきます。
 
-```objective-c
+```c
 // Bridging-Header.h
 
 #import "React/RCTBridgeModule.h"
 ```
 
-続いて、SwiftクラスにCounterクラスを定義します。
+続いて、Swift クラスに Counter クラスを定義します。
 
 ```swift
 // Counter.swift
@@ -65,11 +65,11 @@ class Counter: NSObject {
 }
 ```
 
-次にObjective-Cのファイルを作成して、Native ModuleをJavaScript側に公開するためのマクロを登録します。
+次に Objective-C のファイルを作成して、Native Module を JavaScript 側に公開するためのマクロを登録します。
 
-`RCT_EXTERN_MODULE`の最初の引数がJavaScript側に公開される名前で、第2引数がNative ModuleのSuper Classを渡します。
+`RCT_EXTERN_MODULE`の最初の引数が JavaScript 側に公開される名前で、第 2 引数が Native Module の Super Class を渡します。
 
-```objective-c
+```
 // Counter.m
 
 #import "React/RCTBridgeModule.h"
@@ -78,11 +78,11 @@ class Counter: NSObject {
 @end
 ```
 
-react-native側では`NativeModules`の中に、先ほど定義したモジュール名でNative Moduleが渡されてくるので、これを利用します。
+react-native 側では`NativeModules`の中に、先ほど定義したモジュール名で Native Module が渡されてくるので、これを利用します。
 
 ```js
 // App.js
-import { NativeModules } from 'react-native';
+import { NativeModules } from "react-native";
 
 const { Counter } = NativeModules;
 
@@ -90,22 +90,22 @@ const { Counter } = NativeModules;
 // Counter.doSomething();
 ```
 
-これでNative Moduleをreact-native側で利用する準備が整いました。
+これで Native Module を react-native 側で利用する準備が整いました。
 
-## Native ModuleからConstantsを受け取る
+## Native Module から Constants を受け取る
 
-Native Module側からcounterの初期値を返します。
+Native Module 側から counter の初期値を返します。
 
-`Counter.swift`に`constantsToExport`メソッドを追加します。react-native側に渡したいものをdictionaryの中に設定していきます。
+`Counter.swift`に`constantsToExport`メソッドを追加します。react-native 側に渡したいものを dictionary の中に設定していきます。
 
 続いて`requiresMainQueueSetup`メソッドも追加します。これはこのクラスの初期化をメインスレッドかバックグラウンドスレッドのどちらで行うかを指定するためのものです。
-何も指定しない場合、次のような警告が表示されます。
+ 何も指定しない場合、次のような警告が表示されます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/swift-react-native2.png 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/swift-react-native2.png)
 
 ```java
 // Counter.swift
-  
+
   ...
 
   @objc
@@ -122,25 +122,25 @@ Native Module側からcounterの初期値を返します。
 }
 ```
 
-react-native側では、`initialCount`は次のように利用することができます。
+react-native 側では、`initialCount`は次のように利用することができます。
 
 ```js
 // App.js
 console.log(Counter.initialCount); // => 0
 ```
 
-## Native ModuleからのCallbackを扱う
+## Native Module からの Callback を扱う
 
-現在のcountを返す`getCount`メソッドを実装します。
+現在の count を返す`getCount`メソッドを実装します。
 
-Callbackは`RCTResponseSenderBlock`クラスで定義されているので、これを引数で受け取ってCallbackを実行します。
+Callback は`RCTResponseSenderBlock`クラスで定義されているので、これを引数で受け取って Callback を実行します。
 
 ```swift
 // Counter.swift
 
 @objc(Counter)
 class Counter: RCTEventEmitter {
-  
+
   private var count = 0
 
   ...
@@ -162,29 +162,29 @@ class Counter: RCTEventEmitter {
 @end
 ```
 
-react-native側では次のように利用します。
+react-native 側では次のように利用します。
 
 ```js
 // App.js
-Counter.getCount(count => console.log(count)); // => 0
+Counter.getCount((count) => console.log(count)); // => 0
 ```
 
-## Native ModuleからのPromiseを扱う
+## Native Module からの Promise を扱う
 
-次はPromiseを扱ってみます。
+次は Promise を扱ってみます。
 
-`decrement`メソッドを実装します。正しく減算できた場合は`resolve`を、countが0で減算しようとした場合に`reject`を返すようにします。
+`decrement`メソッドを実装します。正しく減算できた場合は`resolve`を、count が 0 で減算しようとした場合に`reject`を返すようにします。
 
-Promiseは`resolve`の場合の`RCTPromiseResolveBlock`と`reject`の場合の`RCTPromiseRejectBlock`を利用します。
+Promise は`resolve`の場合の`RCTPromiseResolveBlock`と`reject`の場合の`RCTPromiseRejectBlock`を利用します。
 
-rejectする場合は、第3引数にErrorオブジェクトが必要なので、`NSError`でエラーを作成しておきます。
+reject する場合は、第 3 引数に Error オブジェクトが必要なので、`NSError`でエラーを作成しておきます。
 
 ```swift
 // Counter.swift
 
 @objc(Counter)
 class Counter: NSObject {
- 
+
   ...
 
   @objc
@@ -211,20 +211,20 @@ class Counter: NSObject {
 @end
 ```
 
-react-native側では通常のPromiseと同じように扱うことができます。
+react-native 側では通常の Promise と同じように扱うことができます。
 
 ```js
 // App.js
 Counter.decrement()
-  .then(count => console.log(count))
-  .catch(error => console.error(error));
+  .then((count) => console.log(count))
+  .catch((error) => console.error(error));
 ```
 
-## Native ModuleからEventを受け取る
+## Native Module から Event を受け取る
 
-最後にdecrementした時に、`onDecrement`イベントが発火するようにして、これをreact-native側で利用できるようにします。
+最後に decrement した時に、`onDecrement`イベントが発火するようにして、これを react-native 側で利用できるようにします。
 
-Eventをreact-native側に送るには`RCTEventEmitter`が必要なので、`Counter.m`を変更してインポートしておきます。
+Event を react-native 側に送るには`RCTEventEmitter`が必要なので、`Counter.m`を変更してインポートしておきます。
 
 ```diff
 // Counter.m
@@ -239,8 +239,8 @@ Eventをreact-native側に送るには`RCTEventEmitter`が必要なので、`Cou
 
 続いて`Counter.swift`を変更します。
 
-まずクラスを`RCTEventEmitter`のサブクラスにします。次に`supportedEvents`を実装して、Native Moduleから発火されるイベント名を返すようにします。
-最後に`requiresMainQueueSetup`をoverrideに変更します。
+まずクラスを`RCTEventEmitter`のサブクラスにします。次に`supportedEvents`を実装して、Native Module から発火されるイベント名を返すようにします。
+最後に`requiresMainQueueSetup`を override に変更します。
 
 ```diff
 // Counter.swift
@@ -248,7 +248,7 @@ Eventをreact-native側に送るには`RCTEventEmitter`が必要なので、`Cou
 @objc(Counter)
 - class Counter: NSObject {
 + class Counter: RCTEventEmitter {
- 
+
   ...
 
 +  @objc
@@ -263,11 +263,11 @@ Eventをreact-native側に送るには`RCTEventEmitter`が必要なので、`Cou
   }
 
   ...
-  
+
 }
 ```
 
-react-native側にイベントを送るには`sendEvent`を使います。送るペイロードは`Map`を使って準備します。
+react-native 側にイベントを送るには`sendEvent`を使います。送るペイロードは`Map`を使って準備します。
 
 ```diff
 // Counter.swift
@@ -288,24 +288,24 @@ react-native側にイベントを送るには`sendEvent`を使います。送る
 }
 ```
 
-react-native側では`NativeEventEmitter`の中にNative Moduleのインスタンスを設定してEventEmitterを取得します。
-あとは、EventEmitterにEventListenerを設定すればOKです。
+react-native 側では`NativeEventEmitter`の中に Native Module のインスタンスを設定して EventEmitter を取得します。
+あとは、EventEmitter に EventListener を設定すれば OK です。
 
 ```js
 // App.js
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter } from "react-native";
 
 const counterEventEmitter = new NativeEventEmitter(Counter);
 
-counterEventEmitter.addListener('onDecrement', ({ count }) => {
+counterEventEmitter.addListener("onDecrement", ({ count }) => {
   console.log(count); // => 1
 });
 ```
 
 ## まとめ
 
-react-nativeでSwiftのNative moduleを呼び出す方法についてでした。
+react-native で Swift の Native module を呼び出す方法についてでした。
 
-Objective-Cを書いていたら、遠い昔に触って挫折した苦い記憶が蘇ってきました。
+Objective-C を書いていたら、遠い昔に触って挫折した苦い記憶が蘇ってきました。
 
-JavaScript側はAndroidと同じ形で処理できるので、マルチプラットフォームのNative Moduleを扱う場合は、両者を等しく扱えるようなI/F設計が重要な気がします。
+JavaScript 側は Android と同じ形で処理できるので、マルチプラットフォームの Native Module を扱う場合は、両者を等しく扱えるような I/F 設計が重要な気がします。

@@ -4,54 +4,53 @@ title: "websocketを使う際の意外な落とし穴"
 date: 2012-10-20 20:00:00 +0900
 comments: true
 tags:
- - nodejs
- - websocket
+  - nodejs
+  - websocket
 ---
 
-本ブログは[東京Node学園祭2012 アドベントカレンダー](http://atnd.org/events/33022)の6日目の記事です。
+本ブログは[東京 Node 学園祭 2012 アドベントカレンダー](http://atnd.org/events/33022)の 6 日目の記事です。
 
-今回は[nodejitsu](http://nodejitsu.com/)を使ってsockect.ioを使ったアプリをホスティングしたところ、websocket（以下、ws）まわりで思わぬハマりポイントがあったというお話しをします。  
+今回は[nodejitsu](http://nodejitsu.com/)を使って sockect.io を使ったアプリをホスティングしたところ、websocket（以下、ws）まわりで思わぬハマりポイントがあったというお話しをします。  
 （同じようなトラブルで悩む方に少しでもヒントをあげられたらと考えています。）
 
 <!-- more -->
 
 ### このエントリでお伝えしたいこと。
 
-1. ws通信は443ポート（wss）で行った方が良い。
-2. wsのみがブロックされた場合にsocket.ioが怪しい挙動をする…（Help me!）
-3. nodejitsuなかなか好いよ。
+1. ws 通信は 443 ポート（wss）で行った方が良い。
+2. ws のみがブロックされた場合に socket.io が怪しい挙動をする…（Help me!）
+3. nodejitsu なかなか好いよ。
 
+## ws 通信は 443 ポート（wss）で行った方が良い。
 
-## ws通信は443ポート（wss）で行った方が良い。
-
-既に周知の事実かもしれませんが、通常のHTTP（80ポート）を使ってws通信を行った場合、
-サーバから送信されたwsの通信データが、クライアントのブラウザに到達する前に（セキュリティソフト、firewall、proxy…などなど）ブロックされることがあります。  
+既に周知の事実かもしれませんが、通常の HTTP（80 ポート）を使って ws 通信を行った場合、
+サーバから送信された ws の通信データが、クライアントのブラウザに到達する前に（セキュリティソフト、firewall、proxy…などなど）ブロックされることがあります。  
 （詳しく知りたい方は[こちらのエントリ](https://github.com/LearnBoost/socket.io/wiki/Socket.IO-and-firewall-software)を読んでみてください。）
 
-サーバを正しく実装したにも関わらずwsが届かないようなときは、そもそもクライアントがws受信できる状態なのか、次の2つのサイトにて確認してみてください。
+サーバを正しく実装したにも関わらず ws が届かないようなときは、そもそもクライアントが ws 受信できる状態なのか、次の 2 つのサイトにて確認してみてください。
 
-* [http://websocketstest.com/](http://websocketstest.com/)（wsとCometの疎通確認ができるサイトです。）
-* [http://wsping.jit.su/](http://wsping.jit.su/)（nodejitsuのwebsoketPingサイトです。）
+- [http://websocketstest.com/](http://websocketstest.com/)（ws と Comet の疎通確認ができるサイトです。）
+- [http://wsping.jit.su/](http://wsping.jit.su/)（nodejitsu の websoketPing サイトです。）
 
-例えばですが、80ポートのwsがブロックされている場合は次のような結果となります。
+例えばですが、80 ポートの ws がブロックされている場合は次のような結果となります。
 
-[{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2012/comp.png 340 500 %}](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2012/comp.png)
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2012/comp.png)
 
 で、厄介なのが、セキュリティソフトにてブロックされている場合で、
-wsの疎通確認自体はOKなのですが、wsがなぜか届かない状態となってしまったので、原因を特定するのに少し時間がかかりました。
+ws の疎通確認自体は OK なのですが、ws がなぜか届かない状態となってしまったので、原因を特定するのに少し時間がかかりました。
 
-_（私の場合はウイルスバスタークラウド2012がブロックしていました。**こちらについてはTrend Microのサポートとやりとりしているので、**何か進展あっておもしろそうだったら書くかもしれません。）_
+_（私の場合はウイルスバスタークラウド 2012 がブロックしていました。**こちらについては Trend Micro のサポートとやりとりしているので、**何か進展あっておもしろそうだったら書くかもしれません。）_
 
-## wsのみがブロックされた場合にsocket.ioが怪しい挙動をする…
+## ws のみがブロックされた場合に socket.io が怪しい挙動をする…
 
-さて、nodejsでws使う際はsocket.ioを使うのがデファクトとなっているのは皆さんご存知だと思います。
-socket.ioではクライアントがws使えない場合、通信手段をwsからXmlHttpRequestなどに自動でダウングレードしてくれる便利機能があるのですが、今回のようにwsのみがブロックされるような場合、そのダウングレード機能がうまく働きませんでした。
+さて、nodejs で ws 使う際は socket.io を使うのがデファクトとなっているのは皆さんご存知だと思います。
+socket.io ではクライアントが ws 使えない場合、通信手段を ws から XmlHttpRequest などに自動でダウングレードしてくれる便利機能があるのですが、今回のように ws のみがブロックされるような場合、そのダウングレード機能がうまく働きませんでした。
 
-wsの正しい挙動としては、まずhttpでハンドシェイクを行い、ハンドシェイクができた後にwsにプロトコルを変更して通信する流れなのですが、どうやらハンドシェイクを確立した後にwsのみがブロックされている場合、socket.ioにて通信手段の変更ができないようです。
+ws の正しい挙動としては、まず http でハンドシェイクを行い、ハンドシェイクができた後に ws にプロトコルを変更して通信する流れなのですが、どうやらハンドシェイクを確立した後に ws のみがブロックされている場合、socket.io にて通信手段の変更ができないようです。
 
-（念のため、Chromeで取ったヘッダーとか載せときますね。）
+（念のため、Chrome で取ったヘッダーとか載せときますね。）
 
-[{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2012/block.png %}](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2012/block.png)
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2012/block.png)
 
 ```txt
 Request URL:ws://wsping.jit.su/socket.io/1/websocket/dL7NXuBCnWhqnZMPAYkU
@@ -75,32 +74,27 @@ Upgrade:websocket
 
 正直、この挙動が仕様なのかバグなのか、それとも私の実装が悪いのか判断できず、一度詳しい方の見解を聞いてみたいです。（Help me!）
 
-今回の件で、改めて新しいプロトコル導入期のライアント周辺環境（N/Wとかセキュリティとか）の課題が大きいなと感じました。（SPDYもそうなんですが･･･）
-現状、より多くのユーザの元にsocket.ioを使った通信を届けるためには、wsの通信をwssとするか、通信手段をXmlHttpRequestなどにダウングレードするのが無難なのかもしれません。
+今回の件で、改めて新しいプロトコル導入期のライアント周辺環境（N/W とかセキュリティとか）の課題が大きいなと感じました。（SPDY もそうなんですが･･･）
+現状、より多くのユーザの元に socket.io を使った通信を届けるためには、ws の通信を wss とするか、通信手段を XmlHttpRequest などにダウングレードするのが無難なのかもしれません。
 
-（ちなみに先に紹介したnodejitsuのwebsocketPingサイトですが、wsが届いていない人もURLをhttpsに変えてアクセスすると届いたりします。）
-（ちなみに、私はwindowsユーザなので、ならではの話題だったりして･･･）
+（ちなみに先に紹介した nodejitsu の websocketPing サイトですが、ws が届いていない人も URL を https に変えてアクセスすると届いたりします。）
+（ちなみに、私は windows ユーザなので、ならではの話題だったりして･･･）
 
-## nodejitsuなかなか好いよ。
+## nodejitsu なかなか好いよ。
 
-最後に2か月くらい[nodejitsu](http://nodejitsu.com/)使って遊んでますが。良かった点を書き連ねてみます。（CEOの[
-Charlie Robbins氏](https://twitter.com/indexzero)も来ることですし。）
+最後に 2 か月くらい[nodejitsu](http://nodejitsu.com/)使って遊んでますが。良かった点を書き連ねてみます。（CEO の[
+Charlie Robbins 氏](https://twitter.com/indexzero)も来ることですし。）
 
-* websocketが使える。
-* 無料期間は1ヵ月。Microプランで月$3。（円高最高！）
-* jitsuを使ったクラウド上へのデプロイがシンプルで簡単（ただし、package.jsonにモジュールの依存関係を正しく書くこと）。
-* サーバ側の実装を変えずにhttps対応（wsもwssとなる）できる。
+- websocket が使える。
+- 無料期間は 1 ヵ月。Micro プランで月$3。（円高最高！）
+- jitsu を使ったクラウド上へのデプロイがシンプルで簡単（ただし、package.json にモジュールの依存関係を正しく書くこと）。
+- サーバ側の実装を変えずに https 対応（ws も wss となる）できる。
 
-実はnodejitsu、初めの頃は結構不安定（落ちてたり、デプロイできなかったり。。。）で「なんだかな～」と思った時期もあったのですが、9月のアップデート以降は安定してます。
+実は nodejitsu、初めの頃は結構不安定（落ちてたり、デプロイできなかったり。。。）で「なんだかな～」と思った時期もあったのですが、9 月のアップデート以降は安定してます。
 
 それから、まだ周辺ツール（ログの監視とか）がまだ充実してない印象があるので、これからの進化に期待といったとこでしょうか？
-とにかく、これからnodejs始める方は使ってみてはいかがでしょうか？
+とにかく、これから nodejs 始める方は使ってみてはいかがでしょうか？
 
 > **修正（2012/10/21)**  
-> Jxckさんの指摘反映  
-> websocketのセキュアなプロトコルはhttpsではなくwss。
-
-ちなみに自分はこの本でNode覚えました。技術英語の勉強にもなっていい本ですよ。
-
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="https://rcm-fe.amazon-adsystem.com/e/cm?ref=tf_til&t=mitsuruog-22&m=amazon&o=9&p=8&l=as1&IS1=1&detail=1&asins=1491943122&linkId=23b628eef8f90c597c673445ed300b91&bc1=000000&lt1=_blank&fc1=333333&lc1=0066c0&bg1=ffffff&f=ifr">
-    </iframe>
+> Jxck さんの指摘反映  
+> websocket のセキュアなプロトコルは https ではなく wss。

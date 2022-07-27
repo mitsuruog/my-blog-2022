@@ -4,16 +4,16 @@ title: "RDB脳でもできた、mongooseを使ってmongodbでリレーション
 date: 2015-02-15 02:28:15 +0900
 comments: true
 tags:
- - mongodb
- - mongoose
+  - mongodb
+  - mongoose
 ---
 
-ずっとRDBを使っていると、mongodbなどNOSQLのスキーマ設計する際に正規化を意識してちょいちょい思考が固まるのですが、mongodbのO/Rマッパーとして有名な[mongoose](https://github.com/learnboost/mongoose)を使う事で、複数のCollection間のリレーションとjoinっぽいことをエミュレーションできるので紹介します。
+ずっと RDB を使っていると、mongodb など NOSQL のスキーマ設計する際に正規化を意識してちょいちょい思考が固まるのですが、mongodb の O/R マッパーとして有名な[mongoose](https://github.com/learnboost/mongoose)を使う事で、複数の Collection 間のリレーションと join っぽいことをエミュレーションできるので紹介します。
 
 <!-- more -->
 
-まず最初に、mongodbでRDBのような第3正規化までやって、、、うんぬんみたいなことを本気でやりたかったら素直にRDBを使いましょう。  
-今回はあくまで、mongodbのお作法に従いながら、たまに「リレーションっぽいことできればいいよねー」といった程度のTipsです。多用注意です。
+まず最初に、mongodb で RDB のような第 3 正規化までやって、、、うんぬんみたいなことを本気でやりたかったら素直に RDB を使いましょう。  
+今回はあくまで、mongodb のお作法に従いながら、たまに「リレーションっぽいことできればいいよねー」といった程度の Tips です。多用注意です。
 
 今回の内容は、こちらの公式ドキュメントに基づくものです。
 
@@ -23,47 +23,48 @@ tags:
 
 今回のスキーマは「社員(Employee)」と「部署(Unit)」として、以下のような構造をしているとします。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2015/mongoose-populate.jpg %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2015/mongoose-populate.jpg)
 
-## refを使ったリレーションの表現
+## ref を使ったリレーションの表現
 
-mongooseの場合、Schema定義の部分で`ref`を使うことでリレーションを表現することができます。  
-mongodbはCollectionにDocumentが作成された際に一意な`ObjectId`が生成されるため、これを外部キーのように利用してリレーションを表現します。
+mongoose の場合、Schema 定義の部分で`ref`を使うことでリレーションを表現することができます。  
+mongodb は Collection に Document が作成された際に一意な`ObjectId`が生成されるため、これを外部キーのように利用してリレーションを表現します。
 
-Schema定義(model.js)
+Schema 定義(model.js)
+
 ```js
-var mongoose = require('mongoose')
-  , Schema = mongoose.Schema
+var mongoose = require("mongoose"),
+  Schema = mongoose.Schema;
 
 // Employee
 var employeeSchema = Schema({
   name: String,
-  unit: { type: Schema.Types.ObjectId, ref: 'Unit' }
+  unit: { type: Schema.Types.ObjectId, ref: "Unit" },
 });
 
 // Unit
 var unitSchema = Schema({
   name: String,
-  employees: [{ type: Schema.Types.ObjectId, ref: 'Employee' }]
+  employees: [{ type: Schema.Types.ObjectId, ref: "Employee" }],
 });
 
-exports.Employee = mongoose.model('Employee', employeeSchema);
-exports.Unit = mongoose.model('Unit', unitSchema);
+exports.Employee = mongoose.model("Employee", employeeSchema);
+exports.Unit = mongoose.model("Unit", unitSchema);
 ```
 
-これで、EmployeeとUnitの双方にObjectIdを通じた参照が定義されました。実際にはそれぞれのDocumentに参照先のObjectIdが設定されます。
+これで、Employee と Unit の双方に ObjectId を通じた参照が定義されました。実際にはそれぞれの Document に参照先の ObjectId が設定されます。
 
-## populationで複数documentをjoinする
+## population で複数 document を join する
 
-外部キー参照のようなものが定義できたので、実際にfindしたときにjoinしてみましょう。社員の中の部署をjoinして取得しましょう。
+外部キー参照のようなものが定義できたので、実際に find したときに join してみましょう。社員の中の部署を join して取得しましょう。
 
 ```js
-var Employee = require('./model').Employee;
+var Employee = require("./model").Employee;
 
 Employee.find()
-  .populate('unit')
-  .exec(function(err, employees) {
-    if(err) throw new Error(err);
+  .populate("unit")
+  .exec(function (err, employees) {
+    if (err) throw new Error(err);
     consolo.log(employees);
   });
 ```
@@ -90,9 +91,9 @@ Employee.find()
 
 このように部署まで取得することができました。
 
-##ネストしたpopulation表現
+##ネストした population 表現
 
-最後は、ネストしたpopulationの場合は次のようにします。社員の中の部署に所属する社員リストまでjoinして取得してみましょう。
+最後は、ネストした population の場合は次のようにします。社員の中の部署に所属する社員リストまで join して取得してみましょう。
 
 ```js
 var Employee = require('./model').Employee,
@@ -150,34 +151,35 @@ Employee.find()
   }
 ]
 ```
+
 社員リストの取得項目を限定したい場合は、`select`でプロパティを指定することができます。
 
 ```js
 var options = {
-  path: 'unit.employees',
-  select: 'name', // -> nameだけ取得
-  model: Employee
+  path: "unit.employees",
+  select: "name", // -> nameだけ取得
+  model: Employee,
 };
 ```
 
-これで部署に所属する社員リストまでjoinして取得することができましたが、結構面倒ですね。
+これで部署に所属する社員リストまで join して取得することができましたが、結構面倒ですね。
 
 ## 最後に
 
-`ref`と`populate`を使う事で、RDBのようなリレーションとjoinを行うことができました。  
-しかし、実際には複数のCollectionをfetchしてObjectIdで紐付けるという泥臭い処理をmongooseが肩代りしてくれているだけです。
+`ref`と`populate`を使う事で、RDB のようなリレーションと join を行うことができました。  
+しかし、実際には複数の Collection を fetch して ObjectId で紐付けるという泥臭い処理を mongoose が肩代りしてくれているだけです。
 
-あまりRDBっぽくならないよう注意しながら利用するべきですが、mongooseを使ってRDBライクなことができるということを知ることで、mongodbに対する敷居がすこし下がるのではないかと思いました。
+あまり RDB っぽくならないよう注意しながら利用するべきですが、mongoose を使って RDB ライクなことができるということを知ることで、mongodb に対する敷居がすこし下がるのではないかと思いました。
 
 特にこのやり取りが読んでて興味深かったです。
 
 [node.js - Mongoose populate vs object nesting - Stack Overflow](http://stackoverflow.com/questions/24096546/mongoose-populate-vs-object-nesting)
 
-ちなみにネストしたpopulationを多用すると、海外の熱心なmongodbファンから怒られるので注意ですw
+ちなみにネストした population を多用すると、海外の熱心な mongodb ファンから怒られるので注意です w
 
 [node.js - Mongoose: How to populate 2 level deep population without populating fields of first level? in mongodb - Stack Overflow](http://stackoverflow.com/questions/27168022/mongoose-how-to-populate-2-level-deep-population-without-populating-fields-of-f)
 
 ## 参考文献
 
-* [Node.js - Mongoose でネストした populate の書き方 - Qiita](http://qiita.com/Teloo/items/824447cfbb9b16dee215)
-* [Can't make nested populate in new mongoose 3.6rc0 · Issue #1377 · LearnBoost/mongoose](https://github.com/LearnBoost/mongoose/issues/1377)
+- [Node.js - Mongoose でネストした populate の書き方 - Qiita](http://qiita.com/Teloo/items/824447cfbb9b16dee215)
+- [Can't make nested populate in new mongoose 3.6rc0 · Issue #1377 · LearnBoost/mongoose](https://github.com/LearnBoost/mongoose/issues/1377)

@@ -9,19 +9,20 @@ tags:
   - aws
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/minecraft01.png
 ---
-「お父さんと2人だけで[マイクラ](https://minecraft.net/ja-jp/)やりたい！」
 
-GWに娘がそんなこと言い出したので、お父さん、ちょっと頑張ってプライベートサーバーを立ててみたよ！
+「お父さんと 2 人だけで[マイクラ](https://minecraft.net/ja-jp/)やりたい！」
+
+GW に娘がそんなこと言い出したので、お父さん、ちょっと頑張ってプライベートサーバーを立ててみたよ！
 
 > 注意：
-> この方法で立てたサーバーには、Minecraft pocket editionからはアクセスできません。Minecraft pocket editionで子供を一緒に遊びたい方は、こちらの記事を参考にしてください。
->  [【親子でマイクラPE】自宅Wi\-Fiで同時プレイ！ 2つのiPhoneで同じ世界に入って遊ぶ方法 \| Minecraft（マインクラフト） \| できるネット](https://dekiru.net/article/15596/)
+> この方法で立てたサーバーには、Minecraft pocket edition からはアクセスできません。Minecraft pocket edition で子供を一緒に遊びたい方は、こちらの記事を参考にしてください。
+> [【親子でマイクラ PE】自宅 Wi\-Fi で同時プレイ！ 2 つの iPhone で同じ世界に入って遊ぶ方法 \| Minecraft（マインクラフト） \| できるネット](https://dekiru.net/article/15596/)
 
 ## 下調べ
 
-少し調べていると、Mincraftは[サーバーがソフトウェアにて配布されていて](https://minecraft.net/en-us/download/server)これを実行するとプライベートサーバーになるようです。
+少し調べていると、Mincraft は[サーバーがソフトウェアにて配布されていて](https://minecraft.net/en-us/download/server)これを実行するとプライベートサーバーになるようです。
 
-これをダウンロードして、自分のローカルPCで動かすとプライベートサーバーが作れるのですが、仕事に行っている間も自宅のPCでMincraftを動かしているのは抵抗があったので、クラウド上にホスティングすることにしました。
+これをダウンロードして、自分のローカル PC で動かすとプライベートサーバーが作れるのですが、仕事に行っている間も自宅の PC で Mincraft を動かしているのは抵抗があったので、クラウド上にホスティングすることにしました。
 
 サーバー代あまりかけたくないし、常時動かす必要はないので、こういう場合は「[Heroku](https://jp.heroku.com/home)」一択ですね。
 
@@ -29,15 +30,16 @@ GWに娘がそんなこと言い出したので、お父さん、ちょっと頑
 
 基本的にはこの[heroku-buildpack-minecraft](https://github.com/jkutner/heroku-buildpack-minecraft)にある通りに設定すると大丈夫です。
 
-### ngrokのtokenを取得する
+### ngrok の token を取得する
 
-[ngrok](https://ngrok.com/)という、ローカルPCにトンネルを作ってInternetに接続できるようにするサービスがあるので、無料のアカウントを取得してtokenを取得します。
+[ngrok](https://ngrok.com/)という、ローカル PC にトンネルを作って Internet に接続できるようにするサービスがあるので、無料のアカウントを取得して token を取得します。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/minecraft02.png 550 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/minecraft02.png)
 
-### gitプロジェクトを作成してeula.txtを作成する
+### git プロジェクトを作成して eula.txt を作成する
 
-新しくgitプロジェクトを作成して、中に`eula.txt`をおきます。
+新しく git プロジェクトを作成して、中に`eula.txt`をおきます。
+
 ```sh
 echo 'eula=true' > eula.txt
 git init
@@ -51,10 +53,10 @@ git commit -m "Add eula.txt"
 eula=true
 ```
 
-### Herokuアプリケーションを作成する
+### Heroku アプリケーションを作成する
 
-[Heroku toolbelt](https://toolbelt.heroku.com/)をインストールしてHerokuアプリケーションを作成します。
-途中でbuildpackと環境変数(ngrokのtoken)の指定をします。
+[Heroku toolbelt](https://toolbelt.heroku.com/)をインストールして Heroku アプリケーションを作成します。
+途中で buildpack と環境変数(ngrok の token)の指定をします。
 
 ```sh
 heroku create
@@ -64,11 +66,11 @@ heroku config:set NGROK_API_TOKEN="xxxxx"
 git push heroku master
 ```
 
-> 環境変数の指定はGUIの設定ページからも行えます。
+> 環境変数の指定は GUI の設定ページからも行えます。
 
-### 接続用アドレスを取得してMincraftから接続する
+### 接続用アドレスを取得して Mincraft から接続する
 
-Herokuのアプリケーションが正常に作成できた後に、実際にHerokuのプライベートサーバーにアクセスして接続用のアドレスを取得します。
+Heroku のアプリケーションが正常に作成できた後に、実際に Heroku のプライベートサーバーにアクセスして接続用のアドレスを取得します。
 
 ```sh
 heroku open
@@ -78,16 +80,17 @@ heroku open
 
 `Server available at: 0.tcp.ngrok.io:XXXXX`
 
-これをMincraftで接続先のサーバーに指定すると、プライベートサーバーにアクセスできるようになります。
+これを Mincraft で接続先のサーバーに指定すると、プライベートサーバーにアクセスできるようになります。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/minecraft03.png 550 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/minecraft03.png)
 
-## セーブデータをS3に保存する
-MincraftのセーブデータはHerokuの中に保存されます。
-しかし、Herokuのサーバーは24時間に1回再起動してしまうので、その度にセーブデータがなくなってしまいます。そこでセーブデータをS3へ転送します。
+## セーブデータを S3 に保存する
 
-AWSのコンソールでS3バケットとIAMを作成して、アクセスキーとシークレットキーを取得します。
-これをHerokuの環境変数に設定します。
+Mincraft のセーブデータは Heroku の中に保存されます。
+しかし、Heroku のサーバーは 24 時間に 1 回再起動してしまうので、その度にセーブデータがなくなってしまいます。そこでセーブデータを S3 へ転送します。
+
+AWS のコンソールで S3 バケットと IAM を作成して、アクセスキーとシークレットキーを取得します。
+これを Heroku の環境変数に設定します。
 
 ```sh
 heroku config:set AWS_BUCKET=your-bucket-name
@@ -95,14 +98,14 @@ heroku config:set AWS_ACCESS_KEY=xxx
 heroku config:set AWS_SECRET_KEY=xxx
 ```
 
-> AWSのIAM設定はこのあたりの記事を参考にしてください。
-> [特定のS3バケットにだけアクセスできるIAMユーザーを作る \| I am mitsuruog](https://blog.mitsuruog.info/2017/11/way-to-api-key-access-s3)
+> AWS の IAM 設定はこのあたりの記事を参考にしてください。
+> [特定の S3 バケットにだけアクセスできる IAM ユーザーを作る \| I am mitsuruog](https://blog.mitsuruog.info/2017/11/way-to-api-key-access-s3)
 
-
-これで60秒に一回、セーブデータが転送されるようになりました。
+これで 60 秒に一回、セーブデータが転送されるようになりました。
 
 ## まとめ
-Herokuでプライベートサーバーを立てる方法でした。HerokuとAWSを扱ったことがあるイケメンなら、そこまで難しくない手順だと思います。
 
-> とはいえプライベートサーバーを立てたあとに、Minecraftにeditionの違いがあることを知り、結局自分用のpocker editionを買って遊ぶことになったのですが。。。
-> 娘がもう少し大きくなってPC使えるようになったら、使いたいと思いますw
+Heroku でプライベートサーバーを立てる方法でした。Heroku と AWS を扱ったことがあるイケメンなら、そこまで難しくない手順だと思います。
+
+> とはいえプライベートサーバーを立てたあとに、Minecraft に edition の違いがあることを知り、結局自分用の pocker edition を買って遊ぶことになったのですが。。。
+> 娘がもう少し大きくなって PC 使えるようになったら、使いたいと思います w

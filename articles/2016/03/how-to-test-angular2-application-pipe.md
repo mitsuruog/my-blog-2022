@@ -11,38 +11,39 @@ tags:
   - unit test
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/angular2-testing-logo.png
 ---
-Angular2の実装の方法は記事をよく目にする機会が増えたので、テストについての自分が困らないように調べてみたシリーズ。
 
-今回はPipeのテスト。
+Angular2 の実装の方法は記事をよく目にする機会が増えたので、テストについての自分が困らないように調べてみたシリーズ。
+
+今回は Pipe のテスト。
 
 <!-- more -->
 
 > （注意）Angular 2.0.0-beta.9 をベースに話しています。
-E2Eテストはprotractorがそのまま利用できると思うので、ここでのテストはユニットテストの話です。
+> E2E テストは protractor がそのまま利用できると思うので、ここでのテストはユニットテストの話です。
 
 ## Angular2 Unit Testing
 
 1. [準備](/2016/03/how-to-test-angular2-application-1.html)
 1. [基本](/2016/03/how-to-test-angular2-application-basic.html)
-1. Mock, Spyの基本(TBD)
-1. [DOMのテスト](/2016/03/how-to-test-angular2-application-dom.html)
-1. [XHRのテスト](/2016/03/how-to-test-angular2-application-xhr.html)
-1. Componentのテスト(TBD)
-1. Serviceのテスト(TBD)
-1. [Pipeのテスト](/2016/03/how-to-test-angular2-application-pipe.html)
-1. Directiveのテスト(TBD)
+1. Mock, Spy の基本(TBD)
+1. [DOM のテスト](/2016/03/how-to-test-angular2-application-dom.html)
+1. [XHR のテスト](/2016/03/how-to-test-angular2-application-xhr.html)
+1. Component のテスト(TBD)
+1. Service のテスト(TBD)
+1. [Pipe のテスト](/2016/03/how-to-test-angular2-application-pipe.html)
+1. Directive のテスト(TBD)
 1. [カバレッジ](/2016/03/how-to-test-angular2-application-coverage.html)
 
-## Pipeのテスト
+## Pipe のテスト
 
-Pipeのテストについて紹介します。
+Pipe のテストについて紹介します。
 
-Angular2のPipeはAngular1のfilterに相当するものです。
-Linuxコマンドの`|(パイプ)`と同義で、入力内容をPipe内で(transform, replaceなど)処理し、結果を出力する単純なものです。
+Angular2 の Pipe は Angular1 の filter に相当するものです。
+Linux コマンドの`|(パイプ)`と同義で、入力内容を Pipe 内で(transform, replace など)処理し、結果を出力する単純なものです。
 
-## Pipeのテストは至ってシンプル
+## Pipe のテストは至ってシンプル
 
-文の区切りの最初の文字を大文字にするPipeをテストします。
+文の区切りの最初の文字を大文字にする Pipe をテストします。
 
 ```
 例）
@@ -50,9 +51,10 @@ abc     => Abc
 abc def => Abc Def
 ```
 
-Pipeのコードはこちらです。
+Pipe のコードはこちらです。
 
 **init-caps.pipe.ts**
+
 ```ts
 import {Pipe, PipeTransform} from 'angular2/core';
 
@@ -66,12 +68,13 @@ export class InitCapsPipe implements PipeTransform {
 }
 ```
 
-Pipeは単純なclassであるため、テストクラス内でインスタンスを生成してテストします。
-至ってシンプルです。  
+Pipe は単純な class であるため、テストクラス内でインスタンスを生成してテストします。
+至ってシンプルです。
 
-下の例では、`beforeEach`でテスト対象のPipeを読み込んでテストしています。
+下の例では、`beforeEach`でテスト対象の Pipe を読み込んでテストしています。
 
 **init-caps.pipe.spec.ts**
+
 ```ts
 import {
   describe,
@@ -81,13 +84,12 @@ import {
   injectAsync,
   beforeEach,
   beforeEachProviders,
-  TestComponentBuilder
-} from 'angular2/testing';
+  TestComponentBuilder,
+} from "angular2/testing";
 
-import {InitCapsPipe} from './init-caps.pipe';
+import { InitCapsPipe } from "./init-caps.pipe";
 
-describe('Test: InitCapsPipe', () => {
-
+describe("Test: InitCapsPipe", () => {
   let testee;
 
   beforeEach(() => {
@@ -95,34 +97,33 @@ describe('Test: InitCapsPipe', () => {
   });
 
   it('"abc"が”Abc”に変換されること', () => {
-    expect(testee.transform('abc')).toEqual('Abc');
+    expect(testee.transform("abc")).toEqual("Abc");
   });
 
   it('"abc def"が”Abc Def”に変換されること', () => {
-    expect(testee.transform('abc def')).toEqual('Abc Def');
+    expect(testee.transform("abc def")).toEqual("Abc Def");
   });
 
   it('"Abc Def"は変換されないこと', () => {
-    expect(testee.transform('Abc Def')).toEqual('Abc Def');
+    expect(testee.transform("Abc Def")).toEqual("Abc Def");
   });
-
 });
 ```
 
-ただし、Pipe内部でDIしているproviderがある場合は、`beforeEachProviders`で読み込んだ後に`inject`でDIする必要があるでしょう。
+ただし、Pipe 内部で DI している provider がある場合は、`beforeEachProviders`で読み込んだ後に`inject`で DI する必要があるでしょう。
 
 ## まとめ
 
-Pipeのテストは以上です。
+Pipe のテストは以上です。
 
-Pipeは構造がシンプルなためテストも簡単です。テストの最初にトライするものとしては最適だと思います。
+Pipe は構造がシンプルなためテストも簡単です。テストの最初にトライするものとしては最適だと思います。
 サンプルコードはこちらを参照してください。
 
-[mitsuruog/_angular2_pipe](https://github.com/mitsuruog/_angular2_pipe)
+[mitsuruog/\_angular2_pipe](https://github.com/mitsuruog/_angular2_pipe)
 
 ### PR
 
-こちらに初学者のためのMinimum starter kitを作成しましたので、ぜひ利用してください。
+こちらに初学者のための Minimum starter kit を作成しましたので、ぜひ利用してください。
 (もちろんテストもできます！！)
 
-mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2 https://github.com/mitsuruog/angular2-minimum-starter
+[mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2](https://github.com/mitsuruog/angular2-minimum-starter)

@@ -7,21 +7,22 @@ tags:
   - react
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/react-uncontrolled-input.png
 ---
+
 たまに見る`uncontrolled input`関連の警告についての小ネタです。
 知っていると原因がすぐわかるのですが、知らないと結構デバックに時間が掛かる面倒な警告です。
 
 <!-- more -->
 
-まず、ReactのForm関連コンポーネントの考え方には`controlled`と`uncontrolled`の2つがあります。
+まず、React の Form 関連コンポーネントの考え方には`controlled`と`uncontrolled`の 2 つがあります。
 
-簡単に両者の違いを説明すると、値がReactのstateで管理されているかどうかです。
+簡単に両者の違いを説明すると、値が React の state で管理されているかどうかです。
 
-`controlled`の方は、値がReactのstateで管理されていて、`setState`しないと変更できません。
-それに対して`uncontrolled`は、値がReactのstateで管理されていないので、従来の方法で値を変更できるのですが、lifecycleイベントなどのReactの様々な恩恵を受けにくくなります。
+`controlled`の方は、値が React の state で管理されていて、`setState`しないと変更できません。
+それに対して`uncontrolled`は、値が React の state で管理されていないので、従来の方法で値を変更できるのですが、lifecycle イベントなどの React の様々な恩恵を受けにくくなります。
 
 ## で、本題ですが。
 
-Reactでフォームがある画面を開発していると、ちょくちょくお目に掛かるのが次の警告です。
+React でフォームがある画面を開発していると、ちょくちょくお目に掛かるのが次の警告です。
 特にフォーム部品を`controlled`にしているにも関わらず、**何か**のタイミングでこの警告が発生するケースがあります。
 
 ```
@@ -37,15 +38,16 @@ More info: https://fb.me/react-controlled-components
 
 ## どこをチェックすればいいのか？
 
-これはReactのフォームコンポーネントに割り当てられているStateの値が、`null`か`undefined`になってしまうタイミングがあるためです。
+これは React のフォームコンポーネントに割り当てられている State の値が、`null`か`undefined`になってしまうタイミングがあるためです。
 
-フォームコンポーネントはStateの値が`null`か`undefined`になった場合、uncontrolledになります。
+フォームコンポーネントは State の値が`null`か`undefined`になった場合、uncontrolled になります。
 
-この警告が発生する状況は大きく2つです。
+この警告が発生する状況は大きく 2 つです。
 もしこの警告が出た場合は、これらをチェックしてみるのが解決の近道です。
 
-### Stateの初期値
-まず1つ目はフォーム部品のStateの初期値に`null`か`undefined`が設定されてる場合です。
+### State の初期値
+
+まず 1 つ目はフォーム部品の State の初期値に`null`か`undefined`が設定されてる場合です。
 
 ```
 this.state = {
@@ -61,7 +63,8 @@ this.state = {};
 ```
 
 ### setState
-もう1つは`setState`で値が`null`か`undefined`になるケースです。
+
+もう 1 つは`setState`で値が`null`か`undefined`になるケースです。
 
 ```
 this.setState({
@@ -72,7 +75,8 @@ this.setState({
 オブジェクトをそのまま設定する場合など、うっかりして起きやすいと思います。
 
 ## まとめ
-Reactのフォームコンポーネントは、割り当てられているStateの値が`null`か`undefined`になると、`uncontrolled`になってしまうので注意するべしという話でした。
+
+React のフォームコンポーネントは、割り当てられている State の値が`null`か`undefined`になると、`uncontrolled`になってしまうので注意するべしという話でした。
 
 - react: ^@15.0.0
-- サンプル: https://codepen.io/mitsuruog/pen/VMZLVj
+- サンプル: <https://codepen.io/mitsuruog/pen/VMZLVj>

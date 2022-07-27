@@ -8,49 +8,50 @@ tags:
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/TypeScriptEnum.png
 ---
 
-TypeScriptのEnumを使った小ネタです。
+TypeScript の Enum を使った小ネタです。
 
-TypeScriptのEnumを使っていると、**Enumの値やメンバー名以外に、何かもう一つ値を追加したい**ことありませんか？
-自分の場合は、多言語化しているアプリケーションなどで、Enumの値に対するテキストを表示する際に、Enumにメッセージキーを割り当てたいことがよくあります。
+TypeScript の Enum を使っていると、**Enum の値やメンバー名以外に、何かもう一つ値を追加したい**ことありませんか？
+自分の場合は、多言語化しているアプリケーションなどで、Enum の値に対するテキストを表示する際に、Enum にメッセージキーを割り当てたいことがよくあります。
 
-今回は、Enumに関数を追加してメッセージキーを返却できるようにする方法の紹介です。
+今回は、Enum に関数を追加してメッセージキーを返却できるようにする方法の紹介です。
 
-## Enumの基本的な使い方
+## Enum の基本的な使い方
 
-次のようなEnumがあったとします。
+次のような Enum があったとします。
 
 ```ts
 enum Type {
-  Normal,  // 0
+  Normal, // 0
   Special, // 1
 }
 ```
 
-基本的なEnumの使い方は、Enumのメンバーを指定して値を取得するか、Enumの値を指定してメンバー名を取得するかです。
+基本的な Enum の使い方は、Enum のメンバーを指定して値を取得するか、Enum の値を指定してメンバー名を取得するかです。
 
 ```ts
 // Enumのメンバーを指定して値を取得する
-console.log(Type.Normal);   // 0
-console.log(Type.Special);  // 1
+console.log(Type.Normal); // 0
+console.log(Type.Special); // 1
 
-console.log(Type["Normal"]);   // 0
-console.log(Type["Special"]);  // 1
+console.log(Type["Normal"]); // 0
+console.log(Type["Special"]); // 1
 
 // Enumの値を指定してメンバー名を取得する
 console.log(Type[0]); // Normal
 console.log(Type[1]); // Special
 
-console.log(Type[Type.Normal]);  // Normal
+console.log(Type[Type.Normal]); // Normal
 console.log(Type[Type.Special]); // Special
 ```
 
-## Enumに関数を追加する
-Enumに関数を追加するには、Enumと同名の`namespace`定義して、その中に関数を定義します。
+## Enum に関数を追加する
+
+Enum に関数を追加するには、Enum と同名の`namespace`定義して、その中に関数を定義します。
 
 ```ts
 namespace Type {
   export function toMessageKey(type: Type) {
-    switch(type) {
+    switch (type) {
       case Type.Normal:
         return "message.normal";
       case Type.Special:
@@ -63,15 +64,15 @@ namespace Type {
 次のように呼び出すと、メッセージキーを取得することができます。
 
 ```ts
-console.log(Type.toMessageKey(Type.Normal));  // message.Normal
+console.log(Type.toMessageKey(Type.Normal)); // message.Normal
 console.log(Type.toMessageKey(Type.Special)); // message.special
 
 console.log(Type.toMessageKey(0)); // message.Normal
 console.log(Type.toMessageKey(1)); // message.special
 ```
 
-JavaScriptにコンパイルされると次のようなコードになっています。
-中身をみた感じだと、Enumオブジェクトに関数を追加しているだけのようです。うん不思議。
+JavaScript にコンパイルされると次のようなコードになっています。
+中身をみた感じだと、Enum オブジェクトに関数を追加しているだけのようです。うん不思議。
 
 ```JavaScript
 (function (Type) {
@@ -89,7 +90,7 @@ JavaScriptにコンパイルされると次のようなコードになってい�
 
 ### (2018/01/30) 追記
 
-1つのファイルにEnumを複数定義して個別で`export`している場合は、次のエラーが出るかもしれません。
+1 つのファイルに Enum を複数定義して個別で`export`している場合は、次のエラーが出るかもしれません。
 
 ```
 Error:(81, 11) TS2395: Individual declarations in merged declaration 'Type' must be all exported or all local.
@@ -112,7 +113,8 @@ export {
 ```
 
 ## まとめ
-TypeScriptのEnumに関数を追加してメッセージキーを返す方法でした。
+
+TypeScript の Enum に関数を追加してメッセージキーを返す方法でした。
 
 やり方は、この記事の「Enum with static functions」を参考にしています。
 

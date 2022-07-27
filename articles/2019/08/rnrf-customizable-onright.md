@@ -13,35 +13,35 @@ thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/rn
 
 前回の話はこちら。
 
-- [react\-native\-router\-fluxのonRightをカスタマイズする \| I am mitsuruog](https://blog.mitsuruog.info/2019/03/rnrf-customizable-onright)
+- [react\-native\-router\-flux の onRight をカスタマイズする \| I am mitsuruog](https://blog.mitsuruog.info/2019/03/rnrf-customizable-onright)
 
-前回はアプリのNavBarの右側にあるボタン(以下、RightButton)をクリックした時に、次の画面にpropsを渡したいようなユースケースを想定していましたが、今回はRightButtonをpropsの条件で出し分けしたいと思います。
+前回はアプリの NavBar の右側にあるボタン(以下、RightButton)をクリックした時に、次の画面に props を渡したいようなユースケースを想定していましたが、今回は RightButton を props の条件で出し分けしたいと思います。
 
 次のような手順で実現できそうです。
 
-1. PageComponent内部でRightButtonを出す
-2. RightButtonをタップした時に、Component内部のタップハンドラ(private function)を実行する
-3. 外部からのpropsの値でRightButtonを出し分けする
+1. PageComponent 内部で RightButton を出す
+2. RightButton をタップした時に、Component 内部のタップハンドラ(private function)を実行する
+3. 外部からの props の値で RightButton を出し分けする
 
-コードは全てTypeScriptです。
+コードは全て TypeScript です。
 
-## PageComponent内部でRightButtonを出す
+## PageComponent 内部で RightButton を出す
 
-RightButtonの追加方法は**いくつかある**のですが、今回はPageComponentにstaticな`navigationOptions`プロパティを追加して、この中でRightButton用のComponentを定義します。
+RightButton の追加方法は**いくつかある**のですが、今回は PageComponent に static な`navigationOptions`プロパティを追加して、この中で RightButton 用の Component を定義します。
 
 > この方法というものがいくつかあって、それぞれ期待する動きをしないので辛いです。
 
 ```ts
 // ...
-import { NavigationScreenProps } from 'react-navigation';
+import { NavigationScreenProps } from "react-navigation";
 
 class Page extends React.Component<State, Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     return {
       // ここにRightButtonのComponentを渡す
-      headerRight: <Button title="+1" />
+      headerRight: <Button title="+1" />,
     };
-  }
+  };
 
   render() {
     // ...
@@ -51,17 +51,16 @@ class Page extends React.Component<State, Props> {
 
 `navigationOptions`で渡されている関数の`navigation`は`react-navigation`の`NavigationScreenProps`の型を使います。これは、`react-native-router-flux`が`react-navigation`をベースとして拡張しているためです。
 
-## RightButtonをタップした時に、Component内部のハンドラを実行する
+## RightButton をタップした時に、Component 内部のハンドラを実行する
 
-RightButtonをタップした時に、Component内部のハンドラを実行するには`Button`Componentの`onPress`を使えば可能です。しかし、`static`プロパティ内部からPageComponent内のprivate functionを呼び出すにはひと工夫必要でした。
+RightButton をタップした時に、Component 内部のハンドラを実行するには`Button`Component の`onPress`を使えば可能です。しかし、`static`プロパティ内部から PageComponent 内の private function を呼び出すにはひと工夫必要でした。
 
-`static`プロパティ内部からPageComponentのfunctionを実行するには、propsの`navigation`を通じてfunctionの参照を渡すことで可能となります。
-`componentDidMount`の中でpropsの`navigation.setParam`を使うことで参照を渡すことができます。
+`static`プロパティ内部から PageComponent の function を実行するには、props の`navigation`を通じて function の参照を渡すことで可能となります。
+`componentDidMount`の中で props の`navigation.setParam`を使うことで参照を渡すことができます。
 
 ```ts
 // ...
-
-import { NavigationScreenProp, NavigationScreenProps } from 'react-navigation';
+import { NavigationScreenProp, NavigationScreenProps } from "react-navigation";
 
 export interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -70,10 +69,10 @@ export interface Props {
 class Page extends React.Component<State, Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     return {
-      headerRight: <Button title="+1" />
+      headerRight: <Button title="+1" />,
     };
-  }
-  
+  };
+
   componentDidMount() {
     // ここでハンドラの参照をセットする
     this.props.navigation.setParams({ onRight: this.onRight });
@@ -99,13 +98,13 @@ class Page extends React.Component<State, Props> {
 // ...
 ```
 
-これでRightButtonをタップした時に`onRight`が呼び出されるようになります。
+これで RightButton をタップした時に`onRight`が呼び出されるようになります。
 
-## 外部からのpropsの値でRightButtonを出し分けする
+## 外部からの props の値で RightButton を出し分けする
 
-外部からのpropsも上の方法と同様に`navigation.setParam`と`getParam`を使って実現します。
+外部からの props も上の方法と同様に`navigation.setParam`と`getParam`を使って実現します。
 
-今回はpropsで`hasButton`が渡されるとします。`componentDidMount`の中で再び`navigation.setParam`を使います。
+今回は props で`hasButton`が渡されるとします。`componentDidMount`の中で再び`navigation.setParam`を使います。
 
 ```diff
 // ...
@@ -128,7 +127,7 @@ class Page extends React.Component<State, Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     return {
 -     headerRight: <Button title="+1" onPress={navigation.getParam('onRight')} />
-+     headerRight: navigation.getParam('hasButton') ? 
++     headerRight: navigation.getParam('hasButton') ?
 +       <Button title="+1" onPress={navigation.getParam('onRight')} /> :
 +       undefined
     };
@@ -137,7 +136,7 @@ class Page extends React.Component<State, Props> {
 // ...
 ```
 
-これでprops経由でRightButtonを出し分けすることができるようになりました。
+これで props 経由で RightButton を出し分けすることができるようになりました。
 
 。。。大変。
 

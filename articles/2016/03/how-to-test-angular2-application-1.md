@@ -11,79 +11,80 @@ tags:
   - unit test
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/angular2-testing-logo.png
 ---
-Angular2の実装の方法は記事をよく目にする機会が増えたので、テストについての自分が困らないように調べてみたシリーズ。
+
+Angular2 の実装の方法は記事をよく目にする機会が増えたので、テストについての自分が困らないように調べてみたシリーズ。
 
 今回は準備編。
 
 <!-- more -->
 
 > （注意）Angular 2.0.0-beta.9 をベースに話しています。
-E2Eテストはprotractorがそのまま利用できると思うので、ここでのテストはユニットテストの話です。
+> E2E テストは protractor がそのまま利用できると思うので、ここでのテストはユニットテストの話です。
 
 ## Angular2 Unit Testing
 
 1. [準備](/2016/03/how-to-test-angular2-application-1.html)
 1. [基本](/2016/03/how-to-test-angular2-application-basic.html)
-1. Mock, Spyの基本(TBD)
-1. [DOMのテスト](/2016/03/how-to-test-angular2-application-dom.html)
-1. [XHRのテスト](/2016/03/how-to-test-angular2-application-xhr.html)
-1. Componentのテスト(TBD)
-1. Serviceのテスト(TBD)
-1. [Pipeのテスト](/2016/03/how-to-test-angular2-application-pipe.html)
-1. Directiveのテスト(TBD)
+1. Mock, Spy の基本(TBD)
+1. [DOM のテスト](/2016/03/how-to-test-angular2-application-dom.html)
+1. [XHR のテスト](/2016/03/how-to-test-angular2-application-xhr.html)
+1. Component のテスト(TBD)
+1. Service のテスト(TBD)
+1. [Pipe のテスト](/2016/03/how-to-test-angular2-application-pipe.html)
+1. Directive のテスト(TBD)
 1. [カバレッジ](/2016/03/how-to-test-angular2-application-coverage.html)
 
 ## 準備編
 
-Angular1の場合と同様に、Angular2でもユニットテストを実行する前に少し下準備が必要です。
-今回は、Angular1経験者向けに変更点などを紹介します。
+Angular1 の場合と同様に、Angular2 でもユニットテストを実行する前に少し下準備が必要です。
+今回は、Angular1 経験者向けに変更点などを紹介します。
 
 サンプルはこちらを参考にしてください。
 [mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2](https://github.com/mitsuruog/angular2-minimum-starter)
 
-## Karma＋Jasmineの構成はそのまま利用できる
+## Karma ＋ Jasmine の構成はそのまま利用できる
 
-ユニットテストの構成はAngular1と同じ構成です。
+ユニットテストの構成は Angular1 と同じ構成です。
 
 - テストランナー
   - [Karma](https://karma-runner.github.io/0.13/index.html)
 - テスティングフレームワーク
   - [Jasmine](http://jasmine.github.io/2.4/introduction.html)
 
-Karmaの設定は次のような形です。
+Karma の設定は次のような形です。
 
 **karma.conf.js**
+
 ```js
-'use strict';
+"use strict";
 // Karma configuration
 
 let baseLibs = [
-  'node_modules/systemjs/dist/system-polyfills.js',
-  'node_modules/systemjs/dist/system.js',
-  'node_modules/es6-shim/es6-shim.js',
-  'node_modules/rxjs/bundles/Rx.js',
-  'node_modules/angular2/bundles/angular2-polyfills.js',
-  'node_modules/angular2/bundles/angular2.dev.js',
-  'node_modules/angular2/bundles/router.dev.js',
-  'node_modules/angular2/bundles/http.dev.js'
+  "node_modules/systemjs/dist/system-polyfills.js",
+  "node_modules/systemjs/dist/system.js",
+  "node_modules/es6-shim/es6-shim.js",
+  "node_modules/rxjs/bundles/Rx.js",
+  "node_modules/angular2/bundles/angular2-polyfills.js",
+  "node_modules/angular2/bundles/angular2.dev.js",
+  "node_modules/angular2/bundles/router.dev.js",
+  "node_modules/angular2/bundles/http.dev.js",
 ];
 
 module.exports = function (config) {
   config.set({
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: "",
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ["jasmine"],
 
     // list of files / patterns to load in the browser
     files: [
       ...baseLibs,
-      'node_modules/angular2/bundles/testing.dev.js',
-      'karma.shim.js',
-      { pattern: 'app/**/*.js', included: false }
+      "node_modules/angular2/bundles/testing.dev.js",
+      "karma.shim.js",
+      { pattern: "app/**/*.js", included: false },
     ],
 
     // list of files to exclude
@@ -96,7 +97,7 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha'],
+    reporters: ["mocha"],
 
     // web server port
     port: 9876,
@@ -113,7 +114,7 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ["Chrome"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -121,45 +122,46 @@ module.exports = function (config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
-  })
-}
+    concurrency: Infinity,
+  });
+};
 ```
 
-~~Karmaの設定ファイルの`frameworks`にてテスティングフレームワークを変更できるので、mochaなど他のものを利用することもできると思います。~~  
-(2016-03-10 追記) Angular2内部でJasmineのDefinitelyTypedを参照しているため、Jasmineを使った方が幸せになれる気がします。
+~~Karma の設定ファイルの`frameworks`にてテスティングフレームワークを変更できるので、mocha など他のものを利用することもできると思います。~~  
+(2016-03-10 追記) Angular2 内部で Jasmine の DefinitelyTyped を参照しているため、Jasmine を使った方が幸せになれる気がします。
 
 `karma.shim.js`という見慣れないファイルについては後で説明します。
 
-## モジュールロードシステムが独自からsystemjsに変更となった
+## モジュールロードシステムが独自から systemjs に変更となった
 
-Angular2で大きく変わった点の一つは、モジュールロードシステムが[systemjs](https://github.com/systemjs/systemjs)に変更された点です。
+Angular2 で大きく変わった点の一つは、モジュールロードシステムが[systemjs](https://github.com/systemjs/systemjs)に変更された点です。
 
-Angular1はモジュール名の名前解決による独自のモジュールロードシステムを持っていました。
-基本的には`<script>`タグでロードした外部スクリプトを、Angular上でモジュールとして再ロードすることで利用していました。
+Angular1 はモジュール名の名前解決による独自のモジュールロードシステムを持っていました。
+基本的には`<script>`タグでロードした外部スクリプトを、Angular 上でモジュールとして再ロードすることで利用していました。
 
-Angular2ではsystemjsの設定ファイルにて利用する外部スクリプトを定義して、systemjsを介してモジュールをロードするようになります。
-これまではテストランナーでテスト用のファイル一式をロードすれば十分でしたが、間にsystemjsが1枚存在する形になります。
+Angular2 では systemjs の設定ファイルにて利用する外部スクリプトを定義して、systemjs を介してモジュールをロードするようになります。
+これまではテストランナーでテスト用のファイル一式をロードすれば十分でしたが、間に systemjs が 1 枚存在する形になります。
 
 そこで、`karma.shim.js`の登場です。
 
-## karma.shim.jsとは
+## karma.shim.js とは
 
-`karma.shim.js`とは、テストを行う前にsystemjsにてモジュールがロードされていることを保証するために、Karmaとsystemjsの初期化のタイミングを制御する役割をするものです。
+`karma.shim.js`とは、テストを行う前に systemjs にてモジュールがロードされていることを保証するために、Karma と systemjs の初期化のタイミングを制御する役割をするものです。
 
-`karma.shim.js`の処理を大きく分けると次の3ステップでテストを実行しています。
+`karma.shim.js`の処理を大きく分けると次の 3 ステップでテストを実行しています。
 
-1. systemjs内にアプリケーションの静的リソースをロード
+1. systemjs 内にアプリケーションの静的リソースをロード
 1. テスト用のブラウザと接続
-1. Specをロード&テスト実行
+1. Spec をロード&テスト実行
 
-refs https://github.com/mitsuruog/angular2-minimum-starter/blob/master/karma.shim.js
+[refs](https://github.com/mitsuruog/angular2-minimum-starter/blob/master/karma.shim.js)
 
-## サンプルSpecを作成して実行してみる
+## サンプル Spec を作成して実行してみる
 
-最後に簡単なSpecを実装してみます。シンプルな`AppComponent`です。
+最後に簡単な Spec を実装してみます。シンプルな`AppComponent`です。
 
 **app.component.ts**
+
 ```ts
 import {Component, OnInit} from 'angular2/core';
 
@@ -173,31 +175,31 @@ import {Component, OnInit} from 'angular2/core';
 export class AppComponent {}
 ```
 
-Specを書いてみます。
+Spec を書いてみます。
 
 **app.component.spec.ts**
+
 ```ts
+import { Component, provide } from "angular2/core";
 import {
   it,
   inject,
   injectAsync,
   beforeEachProviders,
-  TestComponentBuilder
-} from 'angular2/testing';
+  TestComponentBuilder,
+} from "angular2/testing";
 
-import {Component, provide} from 'angular2/core';
-import {AppComponent} from './app.component';
+import { AppComponent } from "./app.component";
 
-describe('Test: AppComponent', () => {
+describe("Test: AppComponent", () => {
+  beforeEachProviders(() => [AppComponent]);
 
-  beforeEachProviders(() => [
-    AppComponent
-  ]);
-
-  it('AppComponentが存在すること', inject([AppComponent], (testee: AppComponent) => {
-    expect(testee).toBeDefined();
-  }));
-
+  it("AppComponentが存在すること", inject(
+    [AppComponent],
+    (testee: AppComponent) => {
+      expect(testee).toBeDefined();
+    }
+  ));
 });
 ```
 
@@ -206,20 +208,21 @@ describe('Test: AppComponent', () => {
 ```
 karma start karma.conf.js
 ```
+
 テストを実行すると結果が表示されます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-1-run.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/testing-angular2-1-run.png)
 
 ## まとめ
 
-モジュールロードシステムがSystemJSに変更されたことで、少し面倒になりましたがこれでAngular1と同様にユニットテストを行う準備ができるはず！！
+モジュールロードシステムが SystemJS に変更されたことで、少し面倒になりましたがこれで Angular1 と同様にユニットテストを行う準備ができるはず！！
 
 ### PR
 
-こちらに初学者のためのMinimum starter kitを作成しましたので、ぜひ利用してください。
+こちらに初学者のための Minimum starter kit を作成しましたので、ぜひ利用してください。
 (もちろんすぐテストできます！！)
 
-mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2 https://github.com/mitsuruog/angular2-minimum-starter
+[mitsuruog/angular2-minimum-starter: Minimum starter kit for angular2](https://github.com/mitsuruog/angular2-minimum-starter)
 
 ### 参考
 

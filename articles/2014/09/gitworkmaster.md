@@ -3,8 +3,8 @@ layout: post
 title: "[Git]workブランチの内容をmasterへ強制マージ"
 date: 2014-09-27 00:23:00 +0900
 comments: true
-tags: 
- - git
+tags:
+  - git
 ---
 
 自分用メモです。
@@ -14,7 +14,7 @@ git reset --hard origin/work
 git push -f origin master
 ```
 
-workブランチで作業していて、コミットログをきれいにしようとしてrebaseするのですが、ぶっちゃけ個人用リポジトリ(※)なので、masterの中途半端なコミットログも最初までrebaseして、masterに強制マージ&プッシュする場合の手順。
+work ブランチで作業していて、コミットログをきれいにしようとして rebase するのですが、ぶっちゃけ個人用リポジトリ(※)なので、master の中途半端なコミットログも最初まで rebase して、master に強制マージ&プッシュする場合の手順。
 
 <!-- more -->
 

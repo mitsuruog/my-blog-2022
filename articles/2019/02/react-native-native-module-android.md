@@ -9,34 +9,34 @@ tags:
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/android-react-native-logo.png
 ---
 
-react-nativeでAndroidのNative moduleを呼び出す方法です。基本的には下の公式ドキュメントのやり方を真似ていますが、一部そのままでは動作しなかった部分があるため、その辺りも紹介します。
+react-native で Android の Native module を呼び出す方法です。基本的には下の公式ドキュメントのやり方を真似ていますが、一部そのままでは動作しなかった部分があるため、その辺りも紹介します。
 
 - [Native Modules · React Native](https://facebook.github.io/react-native/docs/native-modules-android)
 
 紹介する内容は次の通りです。
 
-- 簡単なCounterをNative Moduleで実装した
-- Native Moduleの呼び出し
-- Native ModuleからConstantsを受け取る
-- Native ModuleからのCallbackを扱う
-- Native ModuleからのPromiseを扱う
-- Native ModuleからのEventを扱う
+- 簡単な Counter を Native Module で実装した
+- Native Module の呼び出し
+- Native Module から Constants を受け取る
+- Native Module からの Callback を扱う
+- Native Module からの Promise を扱う
+- Native Module からの Event を扱う
 
 対象のバージョンは次の通りです。
 
 - react-native: 0.57.8
 - Android SDK: 27(Oreo)
 
-プロジェクト全体のコードはGitHubで見ることができます。
+プロジェクト全体のコードは GitHub で見ることができます。
 
-- https://github.com/mitsuruog/react-native-call-native-module-sample
+- <https://github.com/mitsuruog/react-native-call-native-module-sample>
 
-ちなみにAndroid開発はほとんどやったことがありません。
+ちなみに Android 開発はほとんどやったことがありません。
 
-## Native Moduleの呼び出し
+## Native Module の呼び出し
 
 まず`ReactContextBaseJavaModule`を継承した`CounterModule.java`を作成します。
-その中に`getName`メソッドを作成して、このモジュール名を返すようにします。このモジュール名をreact-native側で利用します。
+その中に`getName`メソッドを作成して、このモジュール名を返すようにします。このモジュール名を react-native 側で利用します。
 
 ```java
 // CounterModule.java
@@ -44,7 +44,7 @@ public class CounterModule extends ReactContextBaseJavaModule {
   public CounterModule(ReactApplicationContext reactApplicationContext) {
     super(reactApplicationContext);
   }
-  
+
   @Override
   public String getName() {
     return "Counter";
@@ -53,7 +53,7 @@ public class CounterModule extends ReactContextBaseJavaModule {
 ```
 
 続いて`ReactPackage`を実装した`CounterPackage.java`を作成します。
-中身は新しく追加したreact-native側で利用できるように登録するためのものなので、あまり細かいことは気にせず、公式ドキュメントのまま実装していきます。
+中身は新しく追加した react-native 側で利用できるように登録するためのものなので、あまり細かいことは気にせず、公式ドキュメントのまま実装していきます。
 
 ```java
 // CounterPackage.java
@@ -73,7 +73,7 @@ public class CounterPackage implements ReactPackage {
 }
 ```
 
-そして`MainApplication.java`の`getPackages`メソッドに`CounterPackage`を追加してreact-native側から参照できるようにします。
+そして`MainApplication.java`の`getPackages`メソッドに`CounterPackage`を追加して react-native 側から参照できるようにします。
 
 ```diff
 // MainApplication.java
@@ -98,11 +98,11 @@ public class MainApplication extends Application implements ReactApplication {
 }
 ```
 
-react-native側では`NativeModules`の中に、先ほど定義したモジュール名でNative Moduleが渡されてくるので、これを利用します。
+react-native 側では`NativeModules`の中に、先ほど定義したモジュール名で Native Module が渡されてくるので、これを利用します。
 
 ```js
 // App.js
-import { NativeModules } from 'react-native';
+import { NativeModules } from "react-native";
 
 const { Counter } = NativeModules;
 
@@ -110,17 +110,17 @@ const { Counter } = NativeModules;
 // Counter.doSomething();
 ```
 
-これでNative Moduleをreact-native側で利用する準備が整いました。
+これで Native Module を react-native 側で利用する準備が整いました。
 
-## Native ModuleからConstantsを受け取る
+## Native Module から Constants を受け取る
 
-Native Module側からcounterの初期値を返します。
+Native Module 側から counter の初期値を返します。
 
-`CounterModule.java`に`getConstants`メソッドを追加します。react-native側に渡したいものを`HashMap`の中に設定していきます。
+`CounterModule.java`に`getConstants`メソッドを追加します。react-native 側に渡したいものを`HashMap`の中に設定していきます。
 
 ```java
 // CounterModule.java
-  
+
   ...
 
   @Override
@@ -131,18 +131,18 @@ Native Module側からcounterの初期値を返します。
   }
 ```
 
-react-native側では、`initialCount`は次のように利用することができます。
+react-native 側では、`initialCount`は次のように利用することができます。
 
 ```js
 // App.js
 console.log(Counter.initialCount); // => 0
 ```
 
-## Native ModuleからのCallbackを扱う
+## Native Module からの Callback を扱う
 
-現在のcountを返す`getCount`メソッドを実装します。
+現在の count を返す`getCount`メソッドを実装します。
 
-Callbackは`Callback`クラスで定義されているので、これを引数で受け取って`invoke`でCallbackを実行します。
+Callback は`Callback`クラスで定義されているので、これを引数で受け取って`invoke`で Callback を実行します。
 
 ```java
 // CounterModule.java
@@ -159,23 +159,23 @@ public class CounterModule extends ReactContextBaseJavaModule {
 }
 ```
 
-> Native Moduleからreact-native側に公開するメソッドには`@ReactMethod`アノテーションをつける必要があります。
-> また、react-nativeとNative Module間のやりとりは常に非同期であるため、戻り値は常に`void`になります。
+> Native Module から react-native 側に公開するメソッドには`@ReactMethod`アノテーションをつける必要があります。
+> また、react-native と Native Module 間のやりとりは常に非同期であるため、戻り値は常に`void`になります。
 
-react-native側では次のように利用します。
+react-native 側では次のように利用します。
 
 ```js
 // App.js
-Counter.getCount(count => console.log(count)); // => 0
+Counter.getCount((count) => console.log(count)); // => 0
 ```
 
-## Native ModuleからのPromiseを扱う
+## Native Module からの Promise を扱う
 
-次はPromiseを扱ってみます。
+次は Promise を扱ってみます。
 
-`decrement`メソッドを実装します。正しく減算できた場合は`resolve`を、countが0で減算しようとした場合に`reject`を返すようにします。
+`decrement`メソッドを実装します。正しく減算できた場合は`resolve`を、count が 0 で減算しようとした場合に`reject`を返すようにします。
 
-Promiseは`Promise`クラスで定義されているので、これを引数で受け取ってそれぞれ`resolve`と`reject`を実行します。（シンプルでわかりやすいですね）
+Promise は`Promise`クラスで定義されているので、これを引数で受け取ってそれぞれ`resolve`と`reject`を実行します。（シンプルでわかりやすいですね）
 
 ```java
 // CounterModule.java
@@ -193,24 +193,24 @@ Promiseは`Promise`クラスで定義されているので、これを引数で�
   }
 ```
 
-react-native側では通常のPromiseと同じように扱うことができます。
+react-native 側では通常の Promise と同じように扱うことができます。
 
 ```js
 // App.js
 Counter.decrement()
-  .then(count => console.log(count))
-  .catch(error => console.error(error));
+  .then((count) => console.log(count))
+  .catch((error) => console.error(error));
 ```
 
-## Native ModuleからEventを受け取る
+## Native Module から Event を受け取る
 
-最後にdecrementした時に、`onDecrement`イベントが発火するようにして、これをreact-native側で利用できるようにします。
+最後に decrement した時に、`onDecrement`イベントが発火するようにして、これを react-native 側で利用できるようにします。
 
-Eventをreact-native側に送るには`ReactContext`が必要なので、`this.getReactApplicationContext()`から取得します。これを使ってイベントを通知します。
+Event を react-native 側に送るには`ReactContext`が必要なので、`this.getReactApplicationContext()`から取得します。これを使ってイベントを通知します。
 
 > 公式ドキュメントだと`ReactContext`をどう取得すればいいか記載がありません。
 
-react-native側に送るペイロードは`WritableMap`を使って準備します。
+react-native 側に送るペイロードは`WritableMap`を使って準備します。
 
 ```java
 // CounterModule.java
@@ -237,16 +237,16 @@ react-native側に送るペイロードは`WritableMap`を使って準備しま�
   }
 ```
 
-react-native側では`NativeEventEmitter`の中にNative Moduleのインスタンスを設定してEventEmitterを取得します。
-あとは、EventEmitterにEventListenerを設定すればOKです。
+react-native 側では`NativeEventEmitter`の中に Native Module のインスタンスを設定して EventEmitter を取得します。
+あとは、EventEmitter に EventListener を設定すれば OK です。
 
 ```js
 // App.js
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter } from "react-native";
 
 const counterEventEmitter = new NativeEventEmitter(Counter);
 
-counterEventEmitter.addListener('onDecrement', ({ count }) => {
+counterEventEmitter.addListener("onDecrement", ({ count }) => {
   console.log(count); // => 1
 });
 ```
@@ -255,5 +255,5 @@ counterEventEmitter.addListener('onDecrement', ({ count }) => {
 
 ## まとめ
 
-react-nativeでAndroidのNative moduleを呼び出す方法についてでした。
-2つのものが繋がって動作すると楽しいですね。
+react-native で Android の Native module を呼び出す方法についてでした。
+2 つのものが繋がって動作すると楽しいですね。

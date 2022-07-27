@@ -9,19 +9,20 @@ tags:
   - nodejs
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2016/heroku-connect.png
 ---
-[Heroku Connect](https://www.heroku.com/connect)は、SalesforceとHeroku上のpostgresとを接続するアドオンです。
 
-Heroku Connectを使うことで、ほぼリアルタイムにSalesforceとHerokuのデータを同期させることができます。
-これにより、Heroku上でSalesforceのデータを利用することができ、これまでのSalesforceの常識にとらわれない新しいSaleforceの使い方が可能になります。
+[Heroku Connect](https://www.heroku.com/connect)は、Salesforce と Heroku 上の postgres とを接続するアドオンです。
 
-Heroku Connectを実際に利用して、Configurationファイル仕様が辛かったので、うまく付き合うためのnpmモジュールを作りました。
+Heroku Connect を使うことで、ほぼリアルタイムに Salesforce と Heroku のデータを同期させることができます。
+これにより、Heroku 上で Salesforce のデータを利用することができ、これまでの Salesforce の常識にとらわれない新しい Saleforce の使い方が可能になります。
+
+Heroku Connect を実際に利用して、Configuration ファイル仕様が辛かったので、うまく付き合うための npm モジュールを作りました。
 
 <!-- more -->
 
- ## モチベーション
+## モチベーション
 
-ここでのConfigurationとは、Salesforce上のオブジェクトとHerokuのpostgres上のカラムを紐付けているMapping定義のことです。
-ConfigurationはHeroku Connectのダッシュボードや[herokuコマンドのプラグイン](https://github.com/heroku/heroku-connect-plugin)をインストールすることで、JSONとしてエクスポートすることができます。
+ここでの Configuration とは、Salesforce 上のオブジェクトと Heroku の postgres 上のカラムを紐付けている Mapping 定義のことです。
+Configuration は Heroku Connect のダッシュボードや[heroku コマンドのプラグイン](https://github.com/heroku/heroku-connect-plugin)をインストールすることで、JSON としてエクスポートすることができます。
 
 こちらがエクスポートしたものです。
 
@@ -155,29 +156,29 @@ ConfigurationはHeroku Connectのダッシュボードや[herokuコマンドの�
 
 ....え！？
 
-Mappingを変更していないにも関わらず、エクスポートするたびに(気まぐれで)順序がバラバラになります。
+Mapping を変更していないにも関わらず、エクスポートするたびに(気まぐれで)順序がバラバラになります。
 
-システム開発を行う過程でMappingの変更はそれなりの頻度があり、Configurationファイルにて変更点を管理したいのですが、これでは変更点がわかりません。
-そこで、アルファベット順でソートするnodeモジュールを書きました。
+システム開発を行う過程で Mapping の変更はそれなりの頻度があり、Configuration ファイルにて変更点を管理したいのですが、これでは変更点がわかりません。
+そこで、アルファベット順でソートする node モジュールを書きました。
 
 [mitsuruog/heroku-connect-configuration-comb: Makes your Heroku Connect Configuration beautiful](https://github.com/mitsuruog/heroku-connect-configuration-comb)
 
 ## 使い方
 
 使い方は簡単です。
-`input.json`にエクスポートしたConfigurationファイルを指定してください。
+`input.json`にエクスポートした Configuration ファイルを指定してください。
 
 ```
 npm install --g heroku-connect-configuration-comb
 heroku-connect-configuration-comb input.json output.json
 ```
 
-これでConfigurationファイルが見れるものになりました。
+これで Configuration ファイルが見れるものになりました。
 
 ## 最後に
 
 そのうち本家で改善されるでしょう。。。
-(中の人が気づいたら、リポジトリにstarしてくれたらいいな。)
+(中の人が気づいたら、リポジトリに star してくれたらいいな。)
 
-Heroku Connectのコンセプトは非常にいいのですが、プロダクトの完成度としてやや利用者視点に欠けた部分が多い印象を持っています。
+Heroku Connect のコンセプトは非常にいいのですが、プロダクトの完成度としてやや利用者視点に欠けた部分が多い印象を持っています。
 今後のアップデートに期待したいです。

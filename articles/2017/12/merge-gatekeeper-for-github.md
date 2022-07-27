@@ -12,9 +12,9 @@ thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/ga
 ## はじめに
 
 ん！？
-このPull Request。。。。
+この Pull Request。。。。
 
-developブランチ向けだと思ったら、マージ先がmasterブランチじゃないかーーーー！
+develop ブランチ向けだと思ったら、マージ先が master ブランチじゃないかーーーー！
 うぉぉぉぉーーー！！！！
 うっかりマージボタン押してしまったーーーーーーー！！
 
@@ -26,37 +26,38 @@ developブランチ向けだと思ったら、マージ先がmasterブランチ�
 
 はい、私はあります。
 
-同じ間違いは二度と起こさない。そんな自分のためにChrome拡張機能を作ってみました。
+同じ間違いは二度と起こさない。そんな自分のために Chrome 拡張機能を作ってみました。
 
-## merge-gatekeeper-for-githubとは
+## merge-gatekeeper-for-github とは
 
-{% img https://github.com/mitsuruog/merge-gatekeeper-for-github/raw/master/assets/images/1280-800.png 400 %}
+![](https://github.com/mitsuruog/merge-gatekeeper-for-github/raw/master/assets/images/1280-800.png)
 
 - [merge gatekeeper for github \- Chrome ウェブストア](https://chrome.google.com/webstore/detail/merge-gatekeeper-for-gith/meogknoedhhdmkgcmmgdibeeinnhfnlg)
 
-「merge-gatekeeper-for-github」は、GitHubの「Merge pull request」ボタンのすぐ近くに、このPRが「**どこから来てどこに行くのか**」かを表示するだけのシンプルな拡張機能です。
+「merge-gatekeeper-for-github」は、GitHub の「Merge pull request」ボタンのすぐ近くに、この PR が「**どこから来てどこに行くのか**」かを表示するだけのシンプルな拡張機能です。
 
 ちなみに、こちらが拡張機能がない場合です。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/gatekeeper01.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/gatekeeper01.png)
 
-GitHub上にもPRの行き先について表示はあるのですが、オリジナルのスタイルに溶け込みすぎて見落としてしまいます。
-それに最近追加されたreviewやマージのためのチェック機能のおかげで、さらにマージボタンから**遠くなってさらに見落とし易くなってしまいました。**
+GitHub 上にも PR の行き先について表示はあるのですが、オリジナルのスタイルに溶け込みすぎて見落としてしまいます。
+それに最近追加された review やマージのためのチェック機能のおかげで、さらにマージボタンから**遠くなってさらに見落とし易くなってしまいました。**
 
 「merge-gatekeeper-for-github」は、マージボタンのすぐ下に、**オリジナルのスタイルを崩さず、かつ目立つ**形で必要な情報を表示します。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/gatekeeper02.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/gatekeeper02.png)
 
-> 実際に作ったのは**8ヶ月前**ですが、もうこれがないと恐ろしくてマージボタンが押せません。
+> 実際に作ったのは**8 ヶ月前**ですが、もうこれがないと恐ろしくてマージボタンが押せません。
 
 ## で、そもそも。。。
+
 で、そもそも。。。
-この件に関しては、GitHubのUIが**ミスを誘発する悪いUI**だと思います。
+この件に関しては、GitHub の UI が**ミスを誘発する悪い UI**だと思います。
 
 はい。以上。
 
-8ヶ月使い続けているのですが、もう手放せなくなってきました。よかったら使ってみてください。
+8 ヶ月使い続けているのですが、もう手放せなくなってきました。よかったら使ってみてください。
 
-ソースコード一式はGitHubにおいてあります。
+ソースコード一式は GitHub においてあります。
 
-- https://github.com/mitsuruog/merge-gatekeeper-for-github
+- <https://github.com/mitsuruog/merge-gatekeeper-for-github>

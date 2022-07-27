@@ -7,21 +7,23 @@ tags:
   - webpack
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bandle-logo.png
 ---
-最近、割と耳にするようになってきた、Webpackのbundle.jsのサイズを減らす話。自分でもやってみたので、結果を紹介します。
+
+最近、割と耳にするようになってきた、Webpack の bundle.js のサイズを減らす話。自分でもやってみたので、結果を紹介します。
 
 > 本当はもう少し減らせるかもねー
 
 ## はじめに
+
 現在の使っているライブラリはこんな感じです。
 
 - React
 - Redux + redux-observable
 
-ちなみに2つのアプリケーションがあるので、bundleは2つに分けてます。
+ちなみに 2 つのアプリケーションがあるので、bundle は 2 つに分けてます。
 
 最初の状態はこちらです。サードパーティのライブラリ(node_modules)のサイズが大きいことがわかります。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle1.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle1.png)
 
 ```txt
 File sizes after gzip:
@@ -43,14 +45,15 @@ rx.js         686KB(32KB)
 joi-browser   382KB(40KB)
 ```
 
-## highlight.jsのサイズを減らす
+## highlight.js のサイズを減らす
+
 やりかたは前に書いた自分の記事を参考に。。。
 
-- [highlight\.jsを小さくバンドルする方法 \| I am mitsuruog](https://blog.mitsuruog.info/2017/12/how-bundle-size-makes-smaller)
+- [highlight\.js を小さくバンドルする方法 \| I am mitsuruog](https://blog.mitsuruog.info/2017/12/how-bundle-size-makes-smaller)
 
 結果:
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle2.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle2.png)
 
 ```txt
 File sizes after gzip:
@@ -63,14 +66,15 @@ File sizes after gzip:
 
 `highlight.js`は「**750KB(90KB) => 90KB(17KB)**」になりました。
 
-## RxJSのサイズを減らす
+## RxJS のサイズを減らす
+
 やりかたはこれを参考にしました。
 
-- [RxJSを小さくバンドルする方法。import文の書き方で容量が変わる \- Qiita](https://qiita.com/clockmaker/items/5e2207b14dac97c4ede1)
+- [RxJS を小さくバンドルする方法。import 文の書き方で容量が変わる \- Qiita](https://qiita.com/clockmaker/items/5e2207b14dac97c4ede1)
 
 結果:
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle3.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle3.png)
 
 ```txt
 File sizes after gzip:
@@ -83,13 +87,13 @@ File sizes after gzip:
 
 `RxJS`は「**686KB(32KB) => 164KB(9KB)**」になりました。
 
-## lodashのサイズを減らす
+## lodash のサイズを減らす
 
 `C3.js`と`joi-browser`はパッとみた感じ減らすのちょっと難しそうだと感じたので、`lodash`のサイズを減らしてみることにしました。
 
-通常の`lodash`はES6のモジュール形式ではないので、ES6モジュール形式でビルドされている[lodash-es](https://www.npmjs.com/package/lodash-es)の方を使います。
+通常の`lodash`は ES6 のモジュール形式ではないので、ES6 モジュール形式でビルドされている[lodash-es](https://www.npmjs.com/package/lodash-es)の方を使います。
 
-これまでimportしていた箇所をこのように変えていきます。
+これまで import していた箇所をこのように変えていきます。
 
 ```diff
 - import { isEqual } from "lodash";
@@ -98,7 +102,7 @@ File sizes after gzip:
 
 結果:
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle4.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/bundle4.png)
 
 ```txt
 File sizes after gzip:
@@ -113,7 +117,7 @@ File sizes after gzip:
 
 ## まとめ
 
-だいたい3割くらい減らすことができました。
+だいたい 3 割くらい減らすことができました。
 
 ```txt
 File sizes after gzip:
@@ -124,7 +128,7 @@ build/static/js/applicant.js
   595.88 KB => 397.02 KB (66.6%)
 ```
 
-Webpack便利なのでついライブラリ追加してしまいがちですが、バンドルサイズが大きくなってないか常に気をつけたいですね。
+Webpack 便利なのでついライブラリ追加してしまいがちですが、バンドルサイズが大きくなってないか常に気をつけたいですね。
 バンドルサイズの測定は**webpack-bundle-analyzer**を使って行いました。
 
 - [webpack-contrib/webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer)

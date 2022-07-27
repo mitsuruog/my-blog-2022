@@ -58,7 +58,7 @@ Google Doc の共同編集を体験した方であれが想像がしやすいか
 
 Live Share を使うと、下のように VS Code 上で他の人がどこを編集しているか一目でわかるようになります。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/liveshare-03.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/liveshare-03.png)
 
 > (画像は本家サイトのもの) https://visualstudio.microsoft.com/services/live-share/
 
@@ -83,7 +83,7 @@ Live Share には**Shared servers**や**Shared terminal**など相手の環境�
 基本的に VS Code を左右 2 ペインにして作業します。
 下の例では左がジュニア、右がシニアです。ジュニア側は React の小さな UI コンポーネントを作成し、シニア側はコンポーネントを検証するコードを書きます。こうすることで 2 人同時に並行作業することができます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/liveshare-02.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/liveshare-02.png)
 
 今回は小さな UI コンポーネントを題材にしました。シニアがスタイルガイド([React Styleguidist](https://react-styleguidist.js.org/))に UI コンポーネントの様々なバリエーションを追加していき、これをジュニアが実装していきます。
 ジュニアがつまづいたりした場合は、ビデオチャットで教えたり、直接コードを変更しながら実装の手順を順番に見せたりします。
@@ -95,7 +95,7 @@ Live Share には**Shared servers**や**Shared terminal**など相手の環境�
 
 二人で作成したコンポーネントは最終的に下のような美しいスタイルガイドになるため、ペアで作業していてスタイルガイドが順番に完成に近いていく様子や、スタイルが崩れるバリエーションの例(文字が長いとか)を、スタイルガイドに追加してジュニアに見せてワイワイさせたり、終始ペア作業をしていて楽しいです。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/liveshare-01.png %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/liveshare-01.png)
 
 また、ネストした構造のコンポーネントをレスポンシブにしていく手順など、これまで教えにくい部分についても、シニアがどのような視点でコンポーネントを完成させていくのか順に見せることで教えやすいように感じています。
 

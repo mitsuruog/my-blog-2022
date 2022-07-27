@@ -3,28 +3,28 @@ layout: post
 title: "nodejitsuでカスタムドメインを使う方法"
 date: 2012-10-31 22:16:00 +0900
 comments: true
-tags: 
- - nodejitsu
- - nodejs
+tags:
+  - nodejitsu
+  - nodejs
 ---
 
-nodejitsuでホスティングした場合、ドメインは「_hoehoe_.jit.su」か「_hoehoe_.nodejitsu.com」（_hoehoe_は自分で決めれる。）となります。  
+nodejitsu でホスティングした場合、ドメインは「_hoehoe_.jit.su」か「_hoehoe_.nodejitsu.com」（*hoehoe*は自分で決めれる。）となります。  
 やっぱり自分で持ってるカスタムドメインで使いたいなと思ったので、やってみました。
 
 <!-- more -->
 
 とは言っても･･･
-基本的に日本人でnodejitsuを使おうと思っているような人は、英語に抵抗がない部類の人だと思いますので、[ここのページ](http://dns.jit.su/)に書いている手順に沿ってサクッとやってしまうと思うのですが、nodejitsuの敷居を下げるために頑張ります。
+基本的に日本人で nodejitsu を使おうと思っているような人は、英語に抵抗がない部類の人だと思いますので、[ここのページ](http://dns.jit.su/)に書いている手順に沿ってサクッとやってしまうと思うのですが、nodejitsu の敷居を下げるために頑張ります。
 
-## 1.nodejitsu.comのIPを調べる。
+## 1.nodejitsu.com の IP を調べる。
 
-まず、nodejitsu.comのIPを調べます。私はwindowsユーザーなので、黒い画面でpingコマンドを使います。
+まず、nodejitsu.com の IP を調べます。私は windows ユーザーなので、黒い画面で ping コマンドを使います。
 
 ```
 ping nodejitsu.com
 ```
 
-おそらく、次のIPのうちのどれかが帰ってくると思いますので、メモしておきます。
+おそらく、次の IP のうちのどれかが帰ってくると思いますので、メモしておきます。
 
 ```
 165.225.129.253
@@ -38,38 +38,38 @@ ping nodejitsu.com
 165.225.131.5
 ```
 
-## 2.ドメインを管理しているプロバイダのDNSを変更する。
+## 2.ドメインを管理しているプロバイダの DNS を変更する。
 
-私の場合は[GoDaddy](http://www.godaddy.com/)でドメイン持っているので、ここでの説明はGoDaddyをベースに行いますが他のプロバイダでも基本的にはやることは同じだと思います。
+私の場合は[GoDaddy](http://www.godaddy.com/)でドメイン持っているので、ここでの説明は GoDaddy をベースに行いますが他のプロバイダでも基本的にはやることは同じだと思います。
 
-手順はGoDaddyの「DNS　Manager」にて「Aレコード」を変更します。
+手順は GoDaddy の「DNS Manager」にて「A レコード」を変更します。
 
 例えば、カスタムドメインが「mitsuruog.com」だったとして、
 
-「mitsuruog.com」をnodejitsuのトップドメインとして使いたい場合は、次のような設定をします。
+「mitsuruog.com」を nodejitsu のトップドメインとして使いたい場合は、次のような設定をします。
 
 ```
-Host　=　@
-Points to　=　1.で調べたIP（165.225.129.253とか）
+Host=@
+Points to=1.で調べたIP（165.225.129.253とか）
 ```
 
-カスタムドメインのサブドメイン（node.mitsuruog.comとか）をnodejitsuのトップドメインとして使いたい場合は、次のような設定をします。
+カスタムドメインのサブドメイン（node.mitsuruog.com とか）を nodejitsu のトップドメインとして使いたい場合は、次のような設定をします。
 
 ```
-Host　=　node
-Points to　=　1.で調べたIP（165.225.129.253とか）
+Host=node
+Points to=1.で調べたIP（165.225.129.253とか）
 ```
 
 「TTL」は特に必要がなければそのままで、変更する必要はないと思います。
 
-ちなみに、DNSを変更した場合、反映されるまで48時間くらい掛かります、気長に待ちましょう。
-DNSが反映された場合、上のドメイン（`http://mitsuruog.com`とか）をブラウザで開くと、nodejitsuの404ページが表示されるようになりますので、目安にしてください。
+ちなみに、DNS を変更した場合、反映されるまで 48 時間くらい掛かります、気長に待ちましょう。
+DNS が反映された場合、上のドメイン（`http://mitsuruog.com`とか）をブラウザで開くと、nodejitsu の 404 ページが表示されるようになりますので、目安にしてください。
 
-## 3.package.jsonの変更
+## 3.package.json の変更
 
-nodejitsu側の設定はすべてpackage.jsonにて指定します。（さすがPaas！）
+nodejitsu 側の設定はすべて package.json にて指定します。（さすが Paas！）
 
-手順はpackage.jsonに上で指定したカスタムドメインを追加するだけです。
+手順は package.json に上で指定したカスタムドメインを追加するだけです。
 
 ```
 {
@@ -81,20 +81,20 @@ nodejitsu側の設定はすべてpackage.jsonにて指定します。（さす�
   "scripts": {
     "start": "./server.js"
   },
- 
- 
+
+
 ・・・（中略）・・・
- 
- 
+
+
   "engines": {
     "node": "v0.8.x"
   }
 }
 ```
 
-## 4.nodejitsu上にデプロイ
+## 4.nodejitsu 上にデプロイ
 
-最後はnodejitsuにデプロイして完了です。
+最後は nodejitsu にデプロイして完了です。
 黒い画面で操作してください。
 
 ```

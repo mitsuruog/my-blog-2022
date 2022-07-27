@@ -9,27 +9,27 @@ tags:
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point-logo.png
 ---
 
-今日はRobloxでセーブポイントを作ってみます。
+今日は Roblox でセーブポイントを作ってみます。
 
 セーブポイントとは、プレイヤーが死んだ時に任意の場所から復活できるものです。Obby(Obstacle course)と呼ばれる障害物を超えてゴールを目指すタイプのゲームにてよく見かけます。
 
 完成形のプロジェクト構造はこちらです。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point1.png 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point1.png)
 
-今回はWorkspaceにPartを4つとServerScriptが1つです。
+今回は Workspace に Part を 4 つと ServerScript が 1 つです。
 
 ## セーブポイントをマップに配置する
 
-まず、Workspaceにセーブポイントを配置します。
-セーブポイントは「SpawnLocation」を使います。SpawnLocationは下ようなギアのマークが付いているブロックで、プレイヤーはこの場所からゲームに参加します。
+まず、Workspace にセーブポイントを配置します。
+セーブポイントは「SpawnLocation」を使います。SpawnLocation は下ようなギアのマークが付いているブロックで、プレイヤーはこの場所からゲームに参加します。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point2.png 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point2.png)
 
-今回は4つ配置します。
-わかりやすいように`Checkpoints`というフォルダに格納して、それぞれの`Name`を1から4までつけます。
+今回は 4 つ配置します。
+わかりやすいように`Checkpoints`というフォルダに格納して、それぞれの`Name`を 1 から 4 までつけます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point3.png 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point3.png)
 
 この画像では見えていないですが、すぐ横に触ると死ぬマグマ玉も置いています。
 
@@ -38,11 +38,11 @@ thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/ro
 プレイヤーがゲームに参加した時にどのセーブポイントから始まるかスタート地点を設定します。
 今回は**①**の場所から始まるようにします。
 
-ServerScriptServiceに`CheckpointScript`を作成します。
+ServerScriptService に`CheckpointScript`を作成します。
 
-まず始めにセーブポイントのブロックを取得して、プレイヤーがゲームに参加した時に、セーブポイントの1つめをスタート地点に設定します。
+まず始めにセーブポイントのブロックを取得して、プレイヤーがゲームに参加した時に、セーブポイントの 1 つめをスタート地点に設定します。
 
-`player.RespawnLocation`にSpawnLocationを設定すると、プレイヤーが死んだ時、設定されたSpawnLocationから復活します。
+`player.RespawnLocation`に SpawnLocation を設定すると、プレイヤーが死んだ時、設定された SpawnLocation から復活します。
 
 ```lua
 local Players = game:GetService("Players")
@@ -62,9 +62,9 @@ Players.PlayerAdded:Connect(onPlayerAdd)
 
 結果はどうでしょうか？
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point4.gif 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point4.gif)
 
-4番目のセーブポイントがスタート地点になっています。
+4 番目のセーブポイントがスタート地点になっています。
 どうやら、セーブポイントを`Name`の昇順で並び替える必要があるようです。
 
 ```lua
@@ -147,13 +147,13 @@ end
 
 実際にセーブポイントに触れてみると、スタート地点が更新されていることがログで確認できます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point5.gif 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point5.gif)
 
 実際に死んでみます。
 
-セーブポイント3に触れた後で、マグマ玉に触れるとセーブポイント3から復活することができます。
+セーブポイント 3 に触れた後で、マグマ玉に触れるとセーブポイント 3 から復活することができます。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point6.gif 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/roblox-save-point6.gif)
 
 ## まとめ
 

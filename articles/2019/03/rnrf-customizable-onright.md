@@ -11,49 +11,48 @@ thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/rn
 
 [react-native-router-flux](https://github.com/aksonov/react-native-router-flux)の小ネタです。
 
-react-native-router-fluxで毎日頭を悩ませています。
+react-native-router-flux で毎日頭を悩ませています。
 うーん、なんだろう。。。初見は使いやすそうなんですが、いざ本番となるといろいろ制約があって悩ましいライブラリですね。
 
 > Part2
-> [react\-native\-router\-fluxのonRightをカスタマイズする(part2) \| I am mitsuruog](https://blog.mitsuruog.info/2019/08/rnrf-customizable-onright)
+> [react\-native\-router\-flux の onRight をカスタマイズする(part2) \| I am mitsuruog](https://blog.mitsuruog.info/2019/08/rnrf-customizable-onright)
 
-
-今回はアプリのNavBarの右側にあるボタンをクリックした時に、次の画面にpropsを渡したいようなユースケースを想定しています。例えば参照画面から編集画面に移動するときなどです。
+今回はアプリの NavBar の右側にあるボタンをクリックした時に、次の画面に props を渡したいようなユースケースを想定しています。例えば参照画面から編集画面に移動するときなどです。
 ボタンは次のイメージのような感じです。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/rnrf1.png 350 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/rnrf1.png)
 
-この時react-native-router-fluxは`onRight`を発火するのですが、これに動的に値を渡すために少し工夫が必要でした。
+この時 react-native-router-flux は`onRight`を発火するのですが、これに動的に値を渡すために少し工夫が必要でした。
 
-## 通常のonRightの定義方法
+## 通常の onRight の定義方法
 
-「プロフィール」と「プロフィール編集」ページを想像してみましょう。「プロフィール」ページの編集ボタンをクリックすると「プロフィール編集」ページに移動します。この時、react-native-router-fluxの`Actions`に**プロフィールIDを渡して次の画面で利用できるようにしたい**です。
+「プロフィール」と「プロフィール編集」ページを想像してみましょう。「プロフィール」ページの編集ボタンをクリックすると「プロフィール編集」ページに移動します。この時、react-native-router-flux の`Actions`に**プロフィール ID を渡して次の画面で利用できるようにしたい**です。
 
 次のコードは通常の`Router`設定です。
-`onRight`は`Scene`と一緒に定義してあり、期待通り「プロフィール編集」しますが、プロフィールIDを値を渡すことはできません。
+`onRight`は`Scene`と一緒に定義してあり、期待通り「プロフィール編集」しますが、プロフィール ID を値を渡すことはできません。
 
 ```ts
 // AppRoute.tsx
   ...
-  <Scene 
-    key="page_profile" 
-    component={Profile} 
+  <Scene
+    key="page_profile"
+    component={Profile}
     title="プロフィール"
-    onRight={() => Actions.page_profile_edit()} 
+    onRight={() => Actions.page_profile_edit()}
     rightTitle="Edit"
   />
-  <Scene 
-    key="page_profile_edit" 
-    component={ProfileEdit} 
+  <Scene
+    key="page_profile_edit"
+    component={ProfileEdit}
     title="プロフィール編集"
   />
   ...
 ```
 
-## onRightをComponentの中で定義する
+## onRight を Component の中で定義する
 
-`onRight`にプロフィールIDを渡すためには、「プロフィール」ページの中で`onRight`ハンドラを**上書き**して、IDを渡せるようにしなければなりません。
-`onRight`はpropsで渡されてくる`navigation.setParams()`にて置き換えできるので、`componentWillMount`でコンポーネントがMountされた時に上書きしましょう。
+`onRight`にプロフィール ID を渡すためには、「プロフィール」ページの中で`onRight`ハンドラを**上書き**して、ID を渡せるようにしなければなりません。
+`onRight`は props で渡されてくる`navigation.setParams()`にて置き換えできるので、`componentWillMount`でコンポーネントが Mount された時に上書きしましょう。
 
 ```ts
 // Profile.tsx
@@ -72,23 +71,23 @@ export Profile extends React.Component<ProfileProps, {}> {
 }
 ```
 
-Routerの方の`onRight`は動かないようにしておきます。
+Router の方の`onRight`は動かないようにしておきます。
 
 ```diff
 // AppRoute.tsx
   ...
-  <Scene 
-    key="page_profile" 
-    component={Profile} 
+  <Scene
+    key="page_profile"
+    component={Profile}
     title="プロフィール"
--    onRight={() => Actions.page_profile_edit()} 
-+    onRight={() => undefined} 
+-    onRight={() => Actions.page_profile_edit()}
++    onRight={() => undefined}
     rightTitle="Edit"
   />
   ...
 ```
 
-TypeScriptで型付けする場合は`@types/react-navigation`の`NavigationScreenProp`を使います。
+TypeScript で型付けする場合は`@types/react-navigation`の`NavigationScreenProp`を使います。
 
 ```ts
 // Profile.tsx

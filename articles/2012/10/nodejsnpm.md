@@ -4,18 +4,18 @@ title: "nodejsでよく使うnpmコマンド"
 date: 2012-10-18 22:45:00 +0900
 comments: true
 tags:
- - nodejs
- - npm
+  - nodejs
+  - npm
 ---
 
-いまいちnpm使えてないなと思ったので、いろいろ調べてみました。  
+いまいち npm 使えてないなと思ったので、いろいろ調べてみました。  
 内容は俺得仕様です。
 
 <!-- more -->
 
 ### このエントリでお伝えしたいこと。
 
-1.  nodejsを普通に使っていく上で困らない程度のnpmコマンドの知識。
+1.  nodejs を普通に使っていく上で困らない程度の npm コマンドの知識。
 
 ## では行きます。
 
@@ -38,15 +38,15 @@ npm -g install module_name
 npm install module_name@0.0.1
 ```
 
-まだnpmにないとか、自分でForkしたモジュールをインストールしたい場合は、直接Githubのリポジトリを指定してもいいです。
+まだ npm にないとか、自分で Fork したモジュールをインストールしたい場合は、直接 Github のリポジトリを指定してもいいです。
 
 ```
 npm install https://github.com/mitsuruog/socket.io/tarball/master
 ```
 
-「GithubのURL/tarball/ブランチ名」となってます。
-tarballはリポジトリをtarでダウンロードするおまじないだと思ってください。
-（ちなみにzipだとzipballです。）
+「Github の URL/tarball/ブランチ名」となってます。
+tarball はリポジトリを tar でダウンロードするおまじないだと思ってください。
+（ちなみに zip だと zipball です。）
 
 モジュールをアンインストールしたい場合は。
 
@@ -93,7 +93,7 @@ qs@0.5.1 node_modules\express\node_modules\qs current=0.4.2
 npm config list
 ```
 
-ちなみにgetで狙い打てます。
+ちなみに get で狙い打てます。
 
 ```
 npm config get keyname
@@ -106,13 +106,13 @@ npm config set keyname value
 npm config delete keyname
 ```
 
-よくやるのがproxyの設定で次のようにやればうまくいきます。
+よくやるのが proxy の設定で次のようにやればうまくいきます。
 
 ```
 npm config set proxy http://localhost:8080
 ```
 
-proxy以外の設定は恐ろしいので手を出していません。
+proxy 以外の設定は恐ろしいので手を出していません。
 
 おまけ  
 キャッシュのクリア
@@ -122,4 +122,4 @@ npm cache clear
 ```
 
 以上です。  
-このあたりのコマンド押さえれば、そうnpmで困らないはず。
+このあたりのコマンド押さえれば、そう npm で困らないはず。

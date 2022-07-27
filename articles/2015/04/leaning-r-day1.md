@@ -4,12 +4,11 @@ title: "とあるフロントエンド屋のR事始め その1"
 date: 2015-04-06 16:25:03 +0900
 comments: true
 tags:
- - r
- - 統計
+  - r
+  - 統計
 ---
 
-
-4月に少しまとまった時間があるということもあり、以前から興味があったのRの統計解析について、せっかくなので勉強してみる。
+4 月に少しまとまった時間があるということもあり、以前から興味があったの R の統計解析について、せっかくなので勉強してみる。
 
 この記事は自分のための学習記録なので、特に有用な情報などありません。  
 あしからず。
@@ -22,7 +21,7 @@ tags:
 
 ## 導入など
 
-Rをインストールしてから、こちらのコマンドで学習用のパッケージをインストールします。
+R をインストールしてから、こちらのコマンドで学習用のパッケージをインストールします。
 
 ```
 install.packages ("Ranko", repos = "http://rmecab.jp/R")
@@ -87,9 +86,9 @@ Sys.setenv("http_proxy"="http://<プロキシサーバー>:<ポート>/")
 
 ### データフレーム
 
-R上で操作するデータの塊のこと。(Excelの計算シートっぽい)  
+R 上で操作するデータの塊のこと。(Excel の計算シートっぽい)  
 添字を指定して任意のデータ集合を作成できる  
-(チュートリアルではデフォルトでcarsのデータセットが設定してある。)
+(チュートリアルではデフォルトで cars のデータセットが設定してある。)
 
 ```
 > cars
@@ -204,22 +203,22 @@ R上で操作するデータの塊のこと。(Excelの計算シートっぽい)
 
 指定したデータセットのサブセットに対して何かの関数処理をさせて結果を表示する。
 
-[by関数について質問を受けたのでまとめてみた - 日々のつれづれ、良かった探し](http://d.hatena.ne.jp/myopomme/20120708/1341740574)
+[by 関数について質問を受けたのでまとめてみた - 日々のつれづれ、良かった探し](http://d.hatena.ne.jp/myopomme/20120708/1341740574)
 
 `summary`は要約統計量を算出する便利関数みたい。
 
 [R-Source 59. 基本統計量の算出](http://cse.naro.affrc.go.jp/takezawa/r-tips/r/59.html)
 
-[Rで統計: データ集合中の最大、最小、平均、中央値 ? summary()関数](http://www.yukun.info/blog/2008/09/r-summary-mean-median.html)
+[R で統計: データ集合中の最大、最小、平均、中央値 ? summary()関数](http://www.yukun.info/blog/2008/09/r-summary-mean-median.html)
 
- summary関数の戻り値
+summary 関数の戻り値
 
- - Min(最小値)
- - 1st Qu(第一四分位数：小さいほうから1/4の値)
- - Median(中央値)
- - Mean(平均値)
- - 3rd Qu(第三四分位数：大きいほうから1/4の値)
- - Max(最大値)
+- Min(最小値)
+- 1st Qu(第一四分位数：小さいほうから 1/4 の値)
+- Median(中央値)
+- Mean(平均値)
+- 3rd Qu(第三四分位数：大きいほうから 1/4 の値)
+- Max(最大値)
 
 ```
 # この例だと売上個数のデータセットにサブセットのお店を渡して`summary`した結果を取得。。。といったとこでしょうか
@@ -233,33 +232,32 @@ bento$お店: 正規屋
   124.0   176.5   200.0   201.1   222.5   274.0
 ```
 
-
 ## グラフ表示
 
 `ggplot2`を使ってグラフを表示。
 
 ### 箱ひげ図(boxplot)
 
-[ボックスプロット | Rのboxplot関数の使い方](http://stat.biopapyrus.net/graph/boxplot.html)
+[ボックスプロット | R の boxplot 関数の使い方](http://stat.biopapyrus.net/graph/boxplot.html)
 
 ```
 # 売上個数をお店ごと(水準)に箱ひげ図化
 > boxplot(売上個数~お店, data=bento)
 ```
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2015/leaning-r-1-1.png 400 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2015/leaning-r-1-1.png)}
 
 ```
 # 売上個数を弁当名ごと(水準)に箱ひげ図化
 > boxplot(売上個数~弁当名, data=omu)
 ```
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2015/leaning-r-1-2.png 400 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2015/leaning-r-1-2.png)
 
-外にある○は外れ値みたい。
+外にある ○ は外れ値みたい。
 
 ## 最後に
 
 なんとなくグラフ表示までできましたが、まだ全然わかりません。  
-まだわからないのでやらさせてる感が半端ないですw。早く自分の道具として扱えるようにしたいですね。  
+まだわからないのでやらさせてる感が半端ないです w。早く自分の道具として扱えるようにしたいですね。  
 いつまで続くかわかりませんが、頑張ります。

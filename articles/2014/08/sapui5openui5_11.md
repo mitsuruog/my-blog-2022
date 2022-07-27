@@ -4,37 +4,34 @@ title: "[SAPUI5/OpenUI5]スマートに国際化する方法"
 date: 2014-08-11 00:46:00 +0900
 comments: true
 tags:
- - HTML5
- - javascript
- - OpenUI5
- - SAPUI5
+  - HTML5
+  - javascript
+  - OpenUI5
+  - SAPUI5
 ---
 
 > How to internationalize the smart in OpenUI5/SAPUI5
 
-エンタープライズ利用を想定した「[OpenUI5](http://sap.github.io/openui5/)」には、企業システムで有用な多くのUIコンポーネントを持っています。   
-しかし、OpenUI5の価値は豊富なUIだけではありません。OpenUI5の本当の価値は、エンタープライズ利用を想定したHTML5ベースのアプリケーションを作成するために、必要な機能を含んだオールインワンかつハイスペックなUIフレームワークということです。  
-今回は、その中でもOpenUI5が持つ強力な国際化機能について説明します。
+エンタープライズ利用を想定した「[OpenUI5](http://sap.github.io/openui5/)」には、企業システムで有用な多くの UI コンポーネントを持っています。  
+しかし、OpenUI5 の価値は豊富な UI だけではありません。OpenUI5 の本当の価値は、エンタープライズ利用を想定した HTML5 ベースのアプリケーションを作成するために、必要な機能を含んだオールインワンかつハイスペックな UI フレームワークということです。  
+今回は、その中でも OpenUI5 が持つ強力な国際化機能について説明します。
 
 <!-- more -->
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2014/a1180_010361.jpg %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2014/a1180_010361.jpg)
 
-1.  OpenUI5での国際化(Internationalization in OpenUI5)
-2.  ロケール判定の優先度(Priority of the locale judgment)
-3.  まとめ(Conclusion)
+## 目次
 
-本記事で利用するデモはこちらで参照出来ます。   
+本記事で利用するデモはこちらで参照出来ます。  
 Demo here :).  
 [http://mitsuruog.github.io/sapui5-showroom/app/#/locale](http://mitsuruog.github.io/sapui5-showroom/app/#/locale)
 
-## 1. OpenUI5での国際化
+## 1. OpenUI5 での国際化
 
-OpenUI5にて国際化するための手順は「リソースモデルファイルの作成」「リソースモデルをロード」「コントロールへデータバインド」の3つです。
+OpenUI5 にて国際化するための手順は「リソースモデルファイルの作成」「リソースモデルをロード」「コントロールへデータバインド」の 3 つです。
 順に説明していきます。
 
 ### リソースモデルファイルの作成
-
 
 まず、国際化用の「**リソースモデル(ResourceModel)**」を作成し、その中に国際化したいメッセージを定義していきます。ファイルはこちらを参考にしてください。
 
@@ -45,15 +42,15 @@ changeLocale = ロケール変更:
 button = これはボタンのテキスト
 ```
 
-このリソースモデルはJavaの「java.util.Properties」クラスと同等のもので、中に「key/value」ペアで値を設定していきます。ファイルの拡張子は「*.properties」です。
-（マルチバイトの場合であってもファイルがUTF-8で作成されていれば、Unicodeエスケープする必要はないようです。）
+このリソースモデルは Java の「java.util.Properties」クラスと同等のもので、中に「key/value」ペアで値を設定していきます。ファイルの拡張子は「\*.properties」です。
+（マルチバイトの場合であってもファイルが UTF-8 で作成されていれば、Unicode エスケープする必要はないようです。）
 
-Webルート直下に「i18n」フォルダを作成して、ファイルを配置するのが慣例のようです。まず、最低限ロケールなしの場合に利用される「**messageBundle.properties**」を作成します。各ロケールごとのファイル名の例は以下の通りです。
+Web ルート直下に「i18n」フォルダを作成して、ファイルを配置するのが慣例のようです。まず、最低限ロケールなしの場合に利用される「**messageBundle.properties**」を作成します。各ロケールごとのファイル名の例は以下の通りです。
 
-*   messageBundle_en.properties
-*   messageBundle_ja.properties
-*   messageBundle_zh_CN.properties
-*   messageBundle_zh-Hans-CN.properties
+- messageBundle_en.properties
+- messageBundle_ja.properties
+- messageBundle_zh_CN.properties
+- messageBundle_zh-Hans-CN.properties
 
 ロケールの言語コードについての詳細はこちらを参照してください。
 
@@ -66,7 +63,8 @@ Webルート直下に「i18n」フォルダを作成して、ファイルを配�
 次に、リソースモデルをアプリケーションにロードしていきます。こちらのコードを参考にしてください。
 
 Locale.controller.coffee
-```coffee
+
+```js
 
 sap.ui.controller "com.mitsuruog.sapui5.showroom.view.Locale",
 
@@ -77,14 +75,15 @@ sap.ui.controller "com.mitsuruog.sapui5.showroom.view.Locale",
     @getView().setModel i18nModel, "i18n"
 ```
 
-ロードする場所は、「Component.js」の`init()`か、国際化対象ViewのControllerの`init()`がいいと思います。`i18n`という名前付きModelとしてロードして、後のコントロールへのデータバインドの際に利用します。
+ロードする場所は、「Component.js」の`init()`か、国際化対象 View の Controller の`init()`がいいと思います。`i18n`という名前付き Model としてロードして、後のコントロールへのデータバインドの際に利用します。
 
 ### コントロールへデータバインド
 
 最後にコントロールの国際化したプロパティへメッセージをデータバインドしていきます。こちらのコードを参照してください。
 
 Locale.view.coffee
-```coffee
+
+```js
 sap.ui.jsview "com.mitsuruog.sapui5.showroom.view.Locale",
 
   getControllerName: -> "com.mitsuruog.sapui5.showroom.view.Locale"
@@ -115,7 +114,7 @@ sap.ui.jsview "com.mitsuruog.sapui5.showroom.view.Locale",
 
 こちらが国際化した結果画面の例です。日本語と英語で画面の項目名などが変化していることが分かると思います。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2014/Hello_SAPUI52_Fotor_Collage.png 650 487 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2014/Hello_SAPUI52_Fotor_Collage.png)
 
 より詳細な内容は公式ページを参照してください。
 
@@ -125,48 +124,46 @@ sap.ui.jsview "com.mitsuruog.sapui5.showroom.view.Locale",
 
 ## 2. ロケール判定の優先度
 
-次に、OpenUI5へのロケール指定の方法とロケール判定に優先度について説明します。こちらが一覧です。上から優先度が高い設定です。
+次に、OpenUI5 へのロケール指定の方法とロケール判定に優先度について説明します。こちらが一覧です。上から優先度が高い設定です。
 
-*   プログラムからの直接設定
-*   URLパラメータからの指定
-*   アプリケーションConfigでの指定
-*   window.navigator.userAgentでの指定(Androidのみ)
-*   window.navigator.languageでの指定
-*   window.navigator.userLanguageでの指定(IEのみ)
-*   window.navigator.browserLanguageでの指定(IEのみ)
-*   デフォルトのロケールは「**en**」
+- プログラムからの直接設定
+- URL パラメータからの指定
+- アプリケーション Config での指定
+- window.navigator.userAgent での指定(Android のみ)
+- window.navigator.language での指定
+- window.navigator.userLanguage での指定(IE のみ)
+- window.navigator.browserLanguage での指定(IE のみ)
+- デフォルトのロケールは「**en**」
 
-かなり細かい指定ですが、大きく分けると以下の5つになるかと思います。
+かなり細かい指定ですが、大きく分けると以下の 5 つになるかと思います。
 
-*   プログラムからの直接設定
-*   URLパラメータからの指定
-*   アプリケーションConfigでの指定
-*   端末固有設定(window.navigator.languageなど)
-*   デフォルト「**en**」
+- プログラムからの直接設定
+- URL パラメータからの指定
+- アプリケーション Config での指定
+- 端末固有設定(window.navigator.language など)
+- デフォルト「**en**」
 
-この中で、プログラマブルに設定する可能性がある「プログラムからの直接設定」「URLパラメータからの指定」「アプリケーションConfigでの指定」について順に説明します。
-
+この中で、プログラマブルに設定する可能性がある「プログラムからの直接設定」「URL パラメータからの指定」「アプリケーション Config での指定」について順に説明します。
 
 ### プログラムからの直接設定
 
-プログラム上でOpenUI5のロケール情報を参照する場合は、`sap.ui.getCore().getConfiguration().getLanguage()`を利用します。
+プログラム上で OpenUI5 のロケール情報を参照する場合は、`sap.ui.getCore().getConfiguration().getLanguage()`を利用します。
 ロケールの変更を行う場合は、`sap.ui.getCore().getConfiguration().setLanguage(local)`を利用します。引数の`local`にはロケールを文字列で設定してください。`null`を設定することはできません。
 
-### URLパラメータからの指定
+### URL パラメータからの指定
 
-URLパラメータに`sap-language`を設定することでアプリケーション呼び出し時に特定のロケールを指定することができます。
+URL パラメータに`sap-language`を設定することでアプリケーション呼び出し時に特定のロケールを指定することができます。
 こちらがその例です。
 
 [http://mitsuruog.github.io/sapui5-showroom/app/?sap-language=en](http://mitsuruog.github.io/sapui5-showroom/app/?sap-language=en)
 
-URLハッシュが付く場合はこちらです。
+URL ハッシュが付く場合はこちらです。
 
 [http://mitsuruog.github.io/sapui5-showroom/app/?sap-language=de#/locale](http://mitsuruog.github.io/sapui5-showroom/app/?sap-language=de#/locale)
 
+### アプリケーション Config での指定
 
-### アプリケーションConfigでの指定
-
-アプリケーションConfigでロケールを設定することも出来ます。こちらは`sap.ui.core.Configuration`を利用するもので、詳細については割愛します。後日機会があれば別途取り上げたいと思います。
+アプリケーション Config でロケールを設定することも出来ます。こちらは`sap.ui.core.Configuration`を利用するもので、詳細については割愛します。後日機会があれば別途取り上げたいと思います。
 
 興味がある方はこちらの公式ドキュメントを参照してください。
 
@@ -174,7 +171,7 @@ URLハッシュが付く場合はこちらです。
 
 ## 3. まとめ
 
-OpenUI5での国際化の方法について説明しました。OpenUI5はグローバルでの利用を想定した強力な国際化の機能を持っています。
+OpenUI5 での国際化の方法について説明しました。OpenUI5 はグローバルでの利用を想定した強力な国際化の機能を持っています。
 
-このような国際化の仕組みは、OpenUI5がエンタープライズ利用を想定したものであり、それを提供するSAP社がグローバルカンパニーであるであるからこと出来たと考えています。  
-簡単に国際化することができることも、OpenUI5の魅力の一つですね。
+このような国際化の仕組みは、OpenUI5 がエンタープライズ利用を想定したものであり、それを提供する SAP 社がグローバルカンパニーであるであるからこと出来たと考えています。  
+簡単に国際化することができることも、OpenUI5 の魅力の一つですね。

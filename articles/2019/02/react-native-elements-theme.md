@@ -8,29 +8,29 @@ tags:
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-elements-logo.png
 ---
 
-react-nativeプロダクトでベースとなるUIコンポーネントライブラリを探していたら、ちょうどいいタイミングで
-[react-native-elements](https://github.com/react-native-training/react-native-elements)がv1になったので使ってみることにしました。
+react-native プロダクトでベースとなる UI コンポーネントライブラリを探していたら、ちょうどいいタイミングで
+[react-native-elements](https://github.com/react-native-training/react-native-elements) が v1 になったので使ってみることにしました。
 
-v1の目玉機能の一つにThemeがあります。
-基本的な使い方は、自身でカスタムThemeを作成してから`ThemeProvider`にそのThemeを渡すだけで動くのですが、一度設定したThemeをプログラムにて変更する場合に一癖あったので、その辺りを紹介します。
+v1 の目玉機能の一つに Theme があります。
+基本的な使い方は、自身でカスタム Theme を作成してから`ThemeProvider`にその Theme を渡すだけで動くのですが、一度設定した Theme をプログラムにて変更する場合に一癖あったので、その辺りを紹介します。
 
-Themeについての公式のドキュメントはこちらです。
+Theme についての公式のドキュメントはこちらです。
 
 - [Customization · React Native Elements](https://react-native-training.github.io/react-native-elements/docs/customization.html)
 
-## Themeの基本的な使い方
+## Theme の基本的な使い方
 
-まずカスタムThemeを作成します。Themeのオブジェクトフォーマットについては[こちら](https://react-native-training.github.io/react-native-elements/docs/customization.html#the-theme-object)を参照してください。
+まずカスタム Theme を作成します。Theme のオブジェクトフォーマットについては[こちら](https://react-native-training.github.io/react-native-elements/docs/customization.html#the-theme-object)を参照してください。
 
 ```js
 const theme = {
   colors: {
-    primary: 'green'
-  }
+    primary: "green",
+  },
 };
 ```
 
-これをApp.jsなどの上位のコンポーネントに`ThemeProvider`を置いてThemeを設定して読み込ませれば大丈夫です。
+これを App.js などの上位のコンポーネントに`ThemeProvider`を置いて Theme を設定して読み込ませれば大丈夫です。
 
 ```js
 // App.js
@@ -47,19 +47,19 @@ const theme = {
 
 ```
 
-## Themeを動的に変更する
+## Theme を動的に変更する
 
-さて、Themeを動的に変更してみましょう。`ThemeProvider`は`theme`をpropsに持っているので、これを変更すればThemeも変更できそうですが、実際には変更できません。
+さて、Theme を動的に変更してみましょう。`ThemeProvider`は`theme`を props に持っているので、これを変更すれば Theme も変更できそうですが、実際には変更できません。
 
 - [Question: Is it possible to toggle active Theme at runtime? · Issue \#1714 · react\-native\-training/react\-native\-elements](https://github.com/react-native-training/react-native-elements/issues/1714)
 
-propsでのThemeの変更をゆるしてしまった場合、全てのコンポーネントツリーのコンポーネントが再描画されてしまうため、これを避けるために`withTheme` HOC(High Order Component)か`ThemeConsumer`を使って`updateTheme`を呼び出す必要があるようです。
+props での Theme の変更をゆるしてしまった場合、全てのコンポーネント  ツリーのコンポーネントが再描画されてしまうため、これを避けるために`withTheme` HOC(High Order Component)か`ThemeConsumer`を使って`updateTheme`を呼び出す必要があるようです。
 
 今回は`withTheme`を使ってみました。
 
-## withThemeを使ったThemeの変更
+## withTheme を使った Theme の変更
 
-まずThemeの変更をトリガーするコンポーネントを`withTheme`でラップします。ラップされたコンポーネントにはpropsに`updatetheme`と`theme`が渡されてくるので、`updateTheme`に変更後のThemeを設定します。
+まず Theme の変更をトリガーするコンポーネントを`withTheme`でラップします。ラップされたコンポーネントには props に`updatetheme`と`theme`が渡されてくるので、`updateTheme`に変更後の Theme を設定します。
 
 ```js
 // Child.js
@@ -68,15 +68,15 @@ const Child = (props) => {
     <View>
       <Button
         title="Change theme"
-        onPress={() => props.updateTheme({ colors: { primary: 'blue' }})}
+        onPress={() => props.updateTheme({ colors: { primary: "blue" } })}
       />
     </View>
   );
-} 
+};
 
 export default withTheme(Child);
 ```
 
 実際の画面はこんな感じで切り替わります。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-elements1.gif 250 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-elements1.gif)

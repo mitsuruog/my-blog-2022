@@ -10,52 +10,57 @@ tags:
   - typescript
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/redux-observable-logo.png
 ---
+
 新規プロダクトで「React + Redux + redux-observable + TypeScript」を使ってみました。
 割と良く仕上がったので、全体アーキテクトを単純にしたサンプルを作ってまとめてみました。同じような構成を考えている人は参考にしてみてください。
 
-対象者は、ReactとTypeScript(もしくはFlux)経験者です。初歩的な部分は割と割愛して説明しています。
+対象者は、React と TypeScript(もしくは Flux)経験者です。初歩的な部分は割と割愛して説明しています。
 
-> 続きがあるので、読み終わったらこちらも見てみてください。2019年1月段階の最新です。
-> - [typesafe\-actionsを使って型安心なRedux Storeを実装する \| I am mitsuruog](https://blog.mitsuruog.info/2018/12/typesafe-redux-store)
+> 続きがあるので、読み終わったらこちらも見てみてください。2019 年 1 月段階の最新です。
+>
+> - [typesafe\-actions を使って型安心な Redux Store を実装する \| I am mitsuruog](https://blog.mitsuruog.info/2018/12/typesafe-redux-store)
 
 ## デモ
-作ったものはこちらのGithubでみれます。
+
+作ったものはこちらの Github でみれます。
 
 - [mitsuruog/react\-redux\-observable\-typescript\-sample: A sample application for React \+ redux\-observable \+ TypeScript](https://github.com/mitsuruog/react-redux-observable-typescript-sample)
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/redux-observable01.png 500 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/redux-observable01.png)
 
-GoogleMapと[OpenWeatherMap](https://openweathermap.org/)のAPIを連動させて、マップをクリックした地点の天気を表示する単純なサンプルです。
+GoogleMap と[OpenWeatherMap](https://openweathermap.org/)の API を連動させて、マップをクリックした地点の天気を表示する単純なサンプルです。
 
 ## はじめに
+
 まずこの構成で始めようと思った方は、最初にこれに目を通すべきです。
 
 - [piotrwitek/react\-redux\-typescript\-guide: A comprehensive guide to static typing in "React & Redux" apps using TypeScript](https://github.com/piotrwitek/react-redux-typescript-guide)
 
 最初はよくわからないと思います。ある程度理解すると内容がわかってくると思うので、常にそばにおいて参照してください。
 
-ちなみに「**Redux**」とは**Fluxの良くある実装パターンに名前をつけたもの**です。
-Fluxを経験した身として、Reduxの主な特徴は次の2点だと感じました。
+ちなみに「**Redux**」とは**Flux の良くある実装パターンに名前をつけたもの**です。
+Flux を経験した身として、Redux の主な特徴は次の 2 点だと感じました。
 
-- 中央管理的なState管理(Store)
-- Store前にあるReducer(減速機)
+- 中央管理的な State 管理(Store)
+- Store 前にある Reducer(減速機)
 
-> **Reducer(減速機)**とは、Storeの手前にあるレイアーで、Storeの値を直接変更する役割をしています。
-> ActionからActionを呼び出して、(加速しながら？)何周かぐるぐる回ることもあるので、(安全のため？)減速機を通してからStoreを変更するためこのような名前になったのではと想像しています。
+> **Reducer(減速機)**とは、Store の手前にあるレイアーで、Store の値を直接変更する役割をしています。
+> Action から Action を呼び出して、(加速しながら？)何周かぐるぐる回ることもあるので、(安全のため？)減速機を通してから Store を変更するためこのような名前になったのではと想像しています。
 
-Fluxの説明としては下の図が有名ですね。
+Flux の説明としては下の図が有名ですね。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/redux-observable02.png 500 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2018/redux-observable02.png)
 
-> https://github.com/facebook/flux/tree/master/examples/flux-concepts より
+> <https://github.com/facebook/flux/tree/master/examples/flux-concepts> より
 
-通常は登場人物は以上なのですが、今回はReduxで副作用を処理部分にedux-observableを使っているため、もう一人「**Epic**」が登場します。
+通常は登場人物は以上なのですが、今回は Redux で副作用を処理部分に edux-observable を使っているため、もう一人「**Epic**」が登場します。
 
 それでは順にキーポイントとなる部分を紹介していきます。
 
-## ActionとConstants
-まずActionを作ります。
-ActionはこれからStoreを変更するための起点となる部分です。基本的には`type`となんらかのデータ構造(今回は`params`と`payload`)をとります。
+## Action と Constants
+
+まず Action を作ります。
+Action はこれから Store を変更するための起点となる部分です。基本的には`type`となんらかのデータ構造(今回は`params`と`payload`)をとります。
 
 ```typescript
 // actions/index.ts
@@ -66,7 +71,7 @@ export interface Action {
 }
 ```
 
-typeは他のReducerやEpicでも使うので、定数化して`Constants`の中に定義しておきます。
+type は他の Reducer や Epic でも使うので、定数化して`Constants`の中に定義しておきます。
 
 ```typescript
 // constants/index.ts
@@ -74,9 +79,9 @@ export const WEATHER_GET = "@@weather/GET";
 ...
 ```
 
-基本的には`@@XXX/SET`をReducer用、それ以外(例えば`@@XXX/GET`)をEpicで使うようにしています。(そこまで厳密じゃないです。)
+基本的には`@@XXX/SET`を Reducer 用、それ以外(例えば`@@XXX/GET`)を Epic で使うようにしています。(そこまで厳密じゃないです。)
 
-Action名は重複すると見つけにくい不具合の原因になるため、[typesafe-actions](https://github.com/piotrwitek/typesafe-actions)を使って定義していきます。
+Action 名は重複すると見つけにくい不具合の原因になるため、[typesafe-actions](https://github.com/piotrwitek/typesafe-actions)を使って定義していきます。
 
 ```typescript
 export const weatherGetAction = createAction(WEATHER_GET, (params = {}) => ({
@@ -86,14 +91,15 @@ export const weatherGetAction = createAction(WEATHER_GET, (params = {}) => ({
 ```
 
 ## Reducer
-次にReducerを作ります。
-Reducerは直前のStateとActionで渡されたものを引数に、新しいStateを返す役割をしています。
+
+次に Reducer を作ります。
+Reducer は直前の State と Action で渡されたものを引数に、新しい State を返す役割をしています。
 
 ```txt
 (previousState: State, action: Action) => newState: State
 ```
 
-まず、Stateと初期Stateを定義します。
+まず、State と初期 State を定義します。
 
 ```typescript
 // reducers/WeatherReducer.ts
@@ -107,11 +113,13 @@ const initialState = {
 };
 ```
 
-次にReducerを定義していきます。
+次に Reducer を定義していきます。
 
 ```typescript
-export const weatherReducer = (state: WeatherState = initialState, action: Action): WeatherState => {
-
+export const weatherReducer = (
+  state: WeatherState = initialState,
+  action: Action
+): WeatherState => {
   switch (action.type) {
     case WEATHER_SET:
       return Object.assign({}, state, { weather: new Weather(action.payload) });
@@ -121,66 +129,70 @@ export const weatherReducer = (state: WeatherState = initialState, action: Actio
   }
 };
 ```
-Reducerの定義の部分で初期State(`initialState`)を設定しているのが見てわかると思います。
 
-また、Object.assignは`Object.assign(state, newState)`としないでください。こうすると元のStateを上書きしてしまうので、ReduxがStateの変更を検知できません。
+Reducer の定義の部分で初期 State(`initialState`)を設定しているのが見てわかると思います。
 
-ここで正しくStateが変更されて初めて、Reduxはその変更を検知してReactなどに対して再描画の指示を出すことができます。
+また、Object.assign は`Object.assign(state, newState)`としないでください。こうすると元の State を上書きしてしまうので、Redux が State の変更を検知できません。
+
+ここで正しく State が変更されて初めて、Redux はその変更を検知して React などに対して再描画の指示を出すことができます。
 
 ## Epic
-次にEpicを作ります。
-Epicはredux-observableのコアコンセプトの1つで、**Actionから呼び出されて、Actionを返します。**
-そのためEpicの作成は「**任意**」です。Actionから何か別のAction(例、APIアクセス、並列処理など)を呼び出す必要がある場合のみ利用します。
+
+次に Epic を作ります。
+Epic は redux-observable のコアコンセプトの 1 つで、**Action から呼び出されて、Action を返します。**
+そのため Epic の作成は「**任意**」です。Action から何か別の Action(例、API アクセス、並列処理など)を呼び出す必要がある場合のみ利用します。
 
 ```txt
 (action$: Observable<Action>, store: Store) => Observable<Action>
 ```
 
-もっとも簡単なEpic例は、Actionを受け取って、別のActionを返すものです。
+もっとも簡単な Epic 例は、Action を受け取って、別の Action を返すものです。
 
 ```typescript
 const deadSimpleEpic: Epic<Action, RootState> = (action$, state) =>
-  action$.ofType(LOVELY_TYPE)
+  action$
+    .ofType(LOVELY_TYPE)
     .map((action: Action) => nextAction(action.payload));
 ```
 
-次にAPIアクセスする例です。
+次に API アクセスする例です。
 
 > 実際のプロダクトでは、`Rx.Observable.ajax`を使ってみたのですが、個人的に好みではなかったので`fetch`を使った例にしています。
 
-`fetch`はPromiseを返すので、これをObservableに変換する共通クラスを作成しています。
+`fetch`は Promise を返すので、これを Observable に変換する共通クラスを作成しています。
 
 ```typescript
 // shared/services/Api.ts
 const getWeather = (lat: number, lng: number) => {
-  const request = fetch(`some_lovely_URL_will_be_here!!`)
-    .then(response => response.json());
+  const request = fetch(`some_lovely_URL_will_be_here!!`).then((response) =>
+    response.json()
+  );
   return Observable.from(request);
 };
 ```
 
-これをEpicの`mergeMap`で受け取って、別のActionに繋ぎます。`weatherSetAction`はStoreを更新するActionです。
+これを Epic の`mergeMap`で受け取って、別の Action に繋ぎます。`weatherSetAction`は Store を更新する Action です。
 
 ```typescript
 // epics/WeatherEpic.ts
 const weatherGetEpic: Epic<Action, RootState> = (action$, state) =>
-  action$.ofType(WEATHER_GET)
+  action$
+    .ofType(WEATHER_GET)
     .mergeMap((action: WeatherAction) =>
-      getWeather(action.params.lat, action.params.lng)
-        .map(payload => weatherSetAction(payload))
+      getWeather(action.params.lat, action.params.lng).map((payload) =>
+        weatherSetAction(payload)
+      )
     );
 ```
 
-最終的には、複数のEpicをまとめて1つにします。
+最終的には、複数の Epic をまとめて 1 つにします。
 
 ```typescript
 // epics/index.ts
-const epics = combineEpics(
-  ...weatherEpic,
-);
+const epics = combineEpics(...weatherEpic);
 ```
 
-redux-observableのEpicを使った場合にはじめに混乱するポイントとしては、**ActionからReducerに直接繋がるケースは少なく、別のActionを経由してからReducerに繋がる点**です。
+redux-observable の Epic を使った場合にはじめに混乱するポイントとしては、**Action から Reducer に直接繋がるケースは少なく、別の Action を経由してから Reducer に繋がる点**です。
 
 ```txt
 // Epicを使わない場合
@@ -191,21 +203,21 @@ Action(@@XXX/GET) => API call => Action(@@XXX/SET) => Reducer => Store => Re-ren
 ```
 
 ## Connect
-次に、Connectを作ります。
-ConnectはReactとFluxの実装パターン(たぶん、コンテナパターン)の一種で、[react-redux](https://github.com/reactjs/react-redux)が採用しているものです。
 
-Reactコンポーネントを「**Connect**」というコンテナでラップして、ReduxのStoreとの橋渡しをします。
-実際には次の2つの橋渡しです。
+次に、Connect を作ります。
+Connect は React と Flux の実装パターン(たぶん、コンテナパターン)の一種で、[react-redux](https://github.com/reactjs/react-redux)が採用しているものです。
 
-- Storeからコンポーネント(慣例で`mapStateToProps`とする)
-- コンポーネントからStore(慣例で`mapDispatchToProps`とする)
+React コンポーネントを「**Connect**」というコンテナでラップして、Redux の Store との橋渡しをします。
+実際には次の 2 つの橋渡しです。
 
-まず、このConnectコンポーネントが外側に見せるProps(`OwnProps`)を定義して、Storeとの橋渡し部分を定義します。
+- Store からコンポーネント(慣例で`mapStateToProps`とする)
+- コンポーネントから Store(慣例で`mapDispatchToProps`とする)
+
+まず、この Connect コンポーネントが外側に見せる Props(`OwnProps`)を定義して、Store との橋渡し部分を定義します。
 
 ```typescript
 // components/Weather.connect.tsx
-interface OwnProps {
-}
+interface OwnProps {}
 
 const mapStateToProps = (state: RootState) => ({
   weather: state.weather.weather,
@@ -217,28 +229,29 @@ const mapDispatchToProps = (dispatch: Function, props: OwnProps) => ({
 });
 ```
 
-connectのインターフェースは一見難しいのですが、Higher order component(HOC)だと思うとわかりやすいかと思います。
-まず、Storeとの橋渡しの定義を設定したHOCを作成してから、オリジナルのコンポーネントを渡して、Connectでラップされたコンポーネントを取り出します。
+connect のインターフェースは一見難しいのですが、Higher order component(HOC)だと思うとわかりやすいかと思います。
+まず、Store との橋渡しの定義を設定した HOC を作成してから、オリジナルのコンポーネントを渡して、Connect でラップされたコンポーネントを取り出します。
 
 ```txt
 connect(mapStateToProps, mapDispatchToProps)(OriginalComponent) => ConnectComponent
 ```
 
-これで、**外側から見ると`OwnProps`のコンポーネントで、中はしっかりReduxのStoreを繋がっているコンポーネント**の出来上がりです。
+これで、**外側から見ると`OwnProps`のコンポーネントで、中はしっかり Redux の Store を繋がっているコンポーネント**の出来上がりです。
 
 ```typescript
 // components/Weather.connect.tsx
 export default connect<{}, {}, WeatherProps>(
   mapStateToProps,
-  mapDispatchToProps,
-)(Weather) as React.ComponentClass<OwnProps>
+  mapDispatchToProps
+)(Weather) as React.ComponentClass<OwnProps>;
 ```
 
 ## Store
-最後はStoreの設定です。Storeをアプリケーションで有効にして、Connectが正しく機能するようにしましょう。
 
-上で作成したConnectを有効にするためには、これらの外側を`Provider`というコンポーネントで囲う必要があります。
-Storeの作成は通常のReduxと同様に`createStore`を使って行います。
+最後は Store の設定です。Store をアプリケーションで有効にして、Connect が正しく機能するようにしましょう。
+
+上で作成した Connect を有効にするためには、これらの外側を`Provider`というコンポーネントで囲う必要があります。
+Store の作成は通常の Redux と同様に`createStore`を使って行います。
 
 ```typescript
 const store = createStore(reducers, preloadedState, enhancer);
@@ -254,13 +267,14 @@ ReactDOM.render(
 以上で紹介終わり。
 
 ## まとめ
-ちょっと詳細割愛してしまった部分もありますが、細かな部分は実際の[Githubリポジトリ](https://github.com/mitsuruog/react-redux-observable-typescript-sample)を見てもらえれば雰囲気わかるかと思います。
+
+ちょっと詳細割愛してしまった部分もありますが、細かな部分は実際の[Github リポジトリ](https://github.com/mitsuruog/react-redux-observable-typescript-sample)を見てもらえれば雰囲気わかるかと思います。
 
 正直「Redux + redux-observable」は学習コスト高めです。使う人を選びます。
 自分は習得できたし、他の人に教えることもできると思うので次のプロダクトでも機会があれば使うと思います。しかし、他の人にはあまり気持ちよく勧められない部分もあるのも事実です。とはいえ、やりごたえはあると思うので、興味がある方はトライしてみては如何でしょうか。
 
 その他、個人的に目を通しておいた方がいいと思うもの。
 
-- [Reduxユーザーが最もハマるstateの不正変更とその検出方法 \| I am mitsuruog](https://blog.mitsuruog.info/2018/02/why-is-immutability-required-by-redux)
+- [Redux ユーザーが最もハマる state の不正変更とその検出方法 \| I am mitsuruog](https://blog.mitsuruog.info/2018/02/why-is-immutability-required-by-redux)
 - [Immutable Update Patterns \- Redux](https://redux.js.org/recipes/structuring-reducers/immutable-update-patterns)
 - [Ecosystem \- Redux](https://redux.js.org/introduction/ecosystem)

@@ -9,14 +9,16 @@ tags:
   - reacr-router-4
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/react-router-4.png
 ---
+
 [react-router v4](https://github.com/ReactTraining/react-router)の小ネタ。
 
 <!-- more -->
 
 ## やりたかったこと
+
 > 昔は`<IndexRoute />`があったんだけどね。。。
 
-例えば、`/users/1`というURLにアクセスがきた時に`/users/1/info`のページを表示させたい場合。
+例えば、`/users/1`という URL にアクセスがきた時に`/users/1/info`のページを表示させたい場合。
 
 `<Redirect />`の中にこんな感じで書くと動くと思ったんですが。。。
 
@@ -25,11 +27,13 @@ thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/re
 ```
 
 ## 実際の挙動
-実際にリダイレクトされたURLは`/users/:id/info`でした。
+
+実際にリダイレクトされた URL は`/users/:id/info`でした。
 
 なんてこったい！
 
 ## 解決方法
+
 一度`<Route />`で囲ってから`render`を使ってリダイレクトします。
 こんな感じでできました。が、正直めんどくさい。
 
@@ -44,7 +48,9 @@ thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2017/re
 ```
 
 ## まとめ
-前のプロジェクトではv2系を使っていたのですが、v4は結構変わってて割と大変ですね。（白目
 
-> 同じようなこと考えてPR送ってくれている人いるんですが、こりゃマージされないな。。。
-> - https://github.com/ReactTraining/react-router/pull/5368
+前のプロジェクトでは v2 系を使っていたのですが、v4 は結構変わってて割と大変ですね。（白目
+
+> 同じようなこと考えて PR 送ってくれている人いるんですが、こりゃマージされないな。。。
+>
+> - <https://github.com/ReactTraining/react-router/pull/5368>

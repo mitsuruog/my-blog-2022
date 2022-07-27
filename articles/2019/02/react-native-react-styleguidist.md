@@ -9,11 +9,11 @@ tags:
 thumbnail: https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-react-styleguidist-logo.png
 ---
 
-react-nativeのプロジェクトで[react-styleguidist](https://github.com/styleguidist/react-styleguidist)を使う方法です。
+react-native のプロジェクトで[react-styleguidist](https://github.com/styleguidist/react-styleguidist)を使う方法です。
 
-コードのサンプルは本家の方にPR送ったのでこちらの見てください。
+コードのサンプルは本家の方に PR 送ったのでこちらの見てください。
 
-- https://github.com/styleguidist/react-styleguidist/tree/master/examples/react-native
+- <https://github.com/styleguidist/react-styleguidist/tree/master/examples/react-native>
 
 > 本家の方でコードが変わっている場合もあります。ご注意ください。
 
@@ -26,64 +26,64 @@ react-nativeのプロジェクトで[react-styleguidist](https://github.com/styl
 - react-native-web: 0.10.0
 - @babel/core: 7.2.2
 
-Expoを使ってますが、react-nativeのプロジェクトでも大まかな手順はほとんど同じだと思います。
+Expo を使ってますが、react-native のプロジェクトでも大まかな手順はほとんど同じだと思います。
 
 ## 動作の仕組み
 
-react-styleguidistにはreact-nativeで動作させるための仕組みがないので、[react-native-web](https://github.com/necolas/react-native-web)を使ってreact-nativeのUIコンポーネントをWebで表示できるように変換して表示します。
+react-styleguidist には react-native で動作させるための仕組みがないので、[react-native-web](https://github.com/necolas/react-native-web)を使って react-native の UI コンポーネントを Web で表示できるように変換して表示します。
 
-簡単な図に表すと次のような仕組みになっています。
+簡単な図に表すと次のような仕組み  に  なっています。
 
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-react-styleguidist1.jpg 550 %}
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-react-styleguidist1.jpg)
 
-通常はreact-nativeは[Metro bundler](https://facebook.github.io/metro/)を通して実行可能な形式になりますが、react-native-webで動かす場合は、[Babel](https://babeljs.io/)を使ってトランスパイルを行ってから、react-styleguidistで処理します。
+通常は react-native は[Metro bundler](https://facebook.github.io/metro/)を通して実行可能な形式になりますが、react-native-web で動かす場合は、[Babel](https://babeljs.io/)を  使って  トランスパイルを行ってから、react-styleguidist で処理します。
 
-## react-styleguidistの導入
+## react-styleguidist の導入
 
-### react-styleguidistとその依存モジュールをインストール
+### react-styleguidist とその  依存モジュールをインストール
 
-react-styleguidistとその依存モジュールをインストールします。
+react-styleguidist とその依存モジュールをインストールします。
 
 ```sh
 npm install --save-dev @babel/core @babel/plugin-proposal-class-properties @babel/plugin-proposal-object-rest-spread @babel/polyfill @babel/preset-env babel-loader babel-plugin-react-native-web file-loader metro-react-native-babel-preset react-dom react-native-web react-styleguidist webpack
 ```
 
-注意点としては、react-native v0.57から[babel-preset-react-native](https://www.npmjs.com/package/babel-preset-react-native)は[metro-react-native-babel-preset](https://github.com/facebook/metro/tree/master/packages/metro-react-native-babel-preset)に置き換わっていて、Babelも7系を使うようになっています。古いサンプルなどは依存関係のバージョンに注意してください。
+注意点としては、react-native v0.57 から[babel-preset-react-native](https://www.npmjs.com/package/babel-preset-react-native)は[metro-react-native-babel-preset](https://github.com/facebook/metro/tree/master/packages/metro-react-native-babel-preset)に置き換わっていて、Babel も 7 系を  使うようになっています。古いサンプルなどは依存関係のバージョンに注意してください。
 
-> `react-art`が依存関係に見つからないというエラーが出る場合は、npmインストールしてください。
+> `react-art`が依存関係に見つからないというエラーが出る場合は、npm インストールしてください。
 
-### styleguide.config.jsを設定する
+### styleguide.config.js を設定  する
 
-styleguide.config.jsを追加します。
+styleguide.config.js を追加します。
 
 ```js
 // styleguide.config.js
-const webpack = require('webpack');
+const webpack = require("webpack");
 
 module.exports = {
-  require: ['@babel/polyfill'],
-  components: 'src/**/[A-Z]*.js',
+  require: ["@babel/polyfill"],
+  components: "src/**/[A-Z]*.js",
   webpackConfig: {
     resolve: {
       // auto resolves any react-native import as react-native-web
-      alias: { 'react-native': 'react-native-web' },
-      extensions: ['.web.js', '.js'],
+      alias: { "react-native": "react-native-web" },
+      extensions: [".web.js", ".js"],
     },
     module: {
       rules: [
         {
           test: /\.js$/,
-          loader: 'babel-loader',
+          loader: "babel-loader",
           exclude: [/node_modules/],
           options: {
             plugins: [
-              '@babel/proposal-class-properties',
-              '@babel/proposal-object-rest-spread',
-              'react-native-web',
+              "@babel/proposal-class-properties",
+              "@babel/proposal-object-rest-spread",
+              "react-native-web",
             ],
             presets: [
-              '@babel/preset-env', 
-              'module:metro-react-native-babel-preset',
+              "@babel/preset-env",
+              "module:metro-react-native-babel-preset",
             ],
             babelrc: false,
           },
@@ -92,18 +92,18 @@ module.exports = {
           test: /\.(jpe?g|png|gif)$/i,
           use: [
             {
-              loader: 'file-loader',
+              loader: "file-loader",
               options: {
-                hash: 'sha512',
-                digest: 'hex',
-                name: '[hash].[ext]',
+                hash: "sha512",
+                digest: "hex",
+                name: "[hash].[ext]",
               },
             },
           ],
         },
         {
           test: /\.ttf$/,
-          loader: 'file-loader',
+          loader: "file-loader",
         },
       ],
     },
@@ -117,25 +117,23 @@ module.exports = {
   },
 };
 ```
+
 
-注意点としては、webpackの`resolve.alias`オプションで、`react-native`の参照先を`react-native-web`に置き換えている部分です。これで内部で宣言されているreact-native部分をreact-native-webに豪快に置き換えています。
+注意点としては、webpack の`resolve.alias`オプションで、`react-native`の参照先を`react-native-web`に置き換えている部分です。これで内部で宣言されている react-native 部分を react-native-web に豪快に置き換えています。
 
-実際のファイルはこちらです。
+ 実際のファイルはこちらです。
 
-- https://github.com/mitsuruog/react-styleguidist/blob/master/examples/react-native/styleguide.config.js
+- <https://github.com/mitsuruog/react-styleguidist/blob/master/examples/react-native/styleguide.config.js>
 
 これで`npm run styleguide`をすると、次のような画面が表示されます。
-
-{% img https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-react-styleguidist2.png 550 %}
-
+![](https://s3-ap-northeast-1.amazonaws.com/blog-mitsuruog/images/2019/react-native-react-styleguidist2.png)
 
 ## まとめ
 
-最近、react-nativeを仕事で使うことが多いのでreact-styleguidistが動かせるかどうか調べてみました。
+最近、react-native を仕事で使うことが多いので react-styleguidist が動かせるかどうか調べてみました。
 
 `react-native`の参照先を`react-native-web`に置き換えているため、実際の再現度など細かな部分で差異がありそうです。
 
 - [react\-native\-web: Compatibility with React Native](https://github.com/necolas/react-native-web#compatibility-with-react-native)
-
 
 > 自分の場合は、採用を検討した結果、`react-native-web`部分に不安があるので見送りました。
