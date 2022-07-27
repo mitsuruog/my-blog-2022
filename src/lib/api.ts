@@ -40,7 +40,13 @@ export function getArticleBySlug(rawSlug: string, fields: ArticleKey[] = []) {
       items.timeReading = timeReading;
     }
     if (field in data) {
-      items[field] = data[field];
+      if (field === "tags") {
+        items.tags = [
+          ...(data.tags ?? []).map((tag: string) => tag.toLowerCase()),
+        ];
+      } else {
+        items[field] = data[field];
+      }
     }
   });
 
@@ -95,15 +101,6 @@ export function getTotalPageCount(): number {
   return Math.ceil(articles.length / COUNT_PER_PAGE);
 }
 
-export function getArticlesByTag(
-  tag: string,
-  fields: ArticleKey[] = []
-): Article[] {
-  return getAllArticles(fields).filter((article) =>
-    (article.tags ?? []).includes(tag)
-  );
-}
-
 export function getArticlesByYearMonth(
   year: string,
   month: string,
@@ -111,6 +108,15 @@ export function getArticlesByYearMonth(
 ): Article[] {
   return getAllArticles(fields).filter(
     (article) => article.year === year && article.month === month
+  );
+}
+
+export function getArticlesByTag(
+  tag: string,
+  fields: ArticleKey[] = []
+): Article[] {
+  return getAllArticles(fields).filter((article) =>
+    (article.tags ?? []).includes(tag)
   );
 }
 
