@@ -16,7 +16,7 @@ export const Header = () => {
           <a>About Me</a>
         </Link>
       </div>
-      <div>
+      <div className="hidden md:block">
         <input
           type="search"
           className="form-input rounded-full border-slate-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"

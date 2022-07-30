@@ -44,7 +44,9 @@ const Home = ({ articles, heroArticle, tags, archives }: HomeProps) => {
                 as={`/tags/${tag}`}
                 href="tags/[tagName]"
               >
-                <a>{tag}</a>
+                <a className="truncate" aria-label={tag}>
+                  {tag}
+                </a>
               </Link>
             ))}
           </div>

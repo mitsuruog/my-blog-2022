@@ -7,7 +7,7 @@ export type TagProps = {
 
 export const Tag = ({ children, onClick }: TagProps) => {
   const rootStyle = classnames(
-    "text-xs font-semibold inline-block py-1 px-2 rounded text-slate-600 bg-slate-200",
+    "text-xs font-semibold inline-block py-1 px-2 rounded text-slate-600 bg-slate-200 truncate",
     {
       "cursor-pointer": Boolean(onClick),
     }
